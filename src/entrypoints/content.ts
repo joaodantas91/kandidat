@@ -1,12 +1,12 @@
-import { autofill } from "@/core/autofill/autofill";
+import { autofill } from '@/core/autofill/autofill';
 
 export default defineContentScript({
   matches: ['<all_urls>'],
-  main () {
+  main() {
     autofill({
       profile: {
-        name: "John Doe"
-      }
-    })
+        name: 'John Doe',
+      },
+    });
   },
 });

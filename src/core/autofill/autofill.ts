@@ -1,13 +1,13 @@
 type Autofill = {
-  root?: Document | Element,
+  root?: Document | Element;
   profile: {
-    name: string
-  }
-}
+    name: string;
+  };
+};
 
 export const autofill = ({ root = document, profile }: Autofill) => {
-  const input = root.querySelector<HTMLInputElement>("#name")
+  const input = root.querySelector<HTMLInputElement>('#name');
   if (input) {
-    input.value = profile.name
+    input.value = profile.name;
   }
-}
+};
