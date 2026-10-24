@@ -6,9 +6,7 @@ type Autofill = {
 }
 
 export const autofill = ({ root = document, profile }: Autofill) => {
-  console.log('Hello content.');
-  console.log('Kandidat is active in:', window.location.hostname);
-  const input = root.querySelector<HTMLInputElement>("#nome")
+  const input = root.querySelector<HTMLInputElement>("#name")
   if (input) {
     input.value = profile.name
   }

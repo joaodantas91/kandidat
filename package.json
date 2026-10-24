@@ -12,16 +12,19 @@
     "zip": "wxt zip",
     "zip:firefox": "wxt zip -b firefox",
     "check": "svelte-check --tsconfig ./tsconfig.json",
-    "postinstall": "wxt prepare"
+    "postinstall": "wxt prepare",
+    "test": "vitest"
   },
   "devDependencies": {
     "@tsconfig/svelte": "^5.0.8",
     "@wxt-dev/module-svelte": "^2.0.4",
+    "happy-dom": "^21.0.4",
     "svelte": "^5.53.7",
     "svelte-check": "^4.4.4",
     "tslib": "^2.8.1",
     "typescript": "^5.9.3",
     "vite": "^8.1.5",
+    "vitest": "^5.0.5",
     "web-ext": "^10.5.0",
     "wxt": "^0.21.3"
   }

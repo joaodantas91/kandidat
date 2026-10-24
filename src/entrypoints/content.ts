@@ -1,4 +1,4 @@
-import { autofill } from "@/core/autofill";
+import { autofill } from "@/core/autofill/autofill";
 
 export default defineContentScript({
   matches: ['<all_urls>'],
