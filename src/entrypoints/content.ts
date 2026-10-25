@@ -4,6 +4,8 @@ import { getProfile, onChangeProfile } from '@/core/storage/storage';
 export default defineContentScript({
   matches: ['<all_urls>'],
   async main() {
+    const persistedProfile = await getProfile();
+    if (persistedProfile) autofill({ profile: persistedProfile });
     onChangeProfile((profile) => {
       if (profile) autofill({ profile });
     });
