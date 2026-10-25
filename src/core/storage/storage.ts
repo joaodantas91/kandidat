@@ -3,6 +3,9 @@ import type { WatchCallback } from 'wxt/utils/storage';
 
 export type Profile = {
   name: string;
+  email?: string;
+  phone?: string;
+  linkedin?: string;
 };
 
 const profile = storage.defineItem<Profile>('local:profile');
