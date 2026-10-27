@@ -58,11 +58,31 @@ function findInput(root: ParentNode, selectors: readonly string[]) {
   return null;
 }
 
+function setInputValue(
+  input: HTMLInputElement,
+  value: NonNullable<Profile[keyof Profile]>,
+) {
+  const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
+    window.HTMLInputElement.prototype,
+    'value',
+  )?.set;
+
+  //for react
+  if (nativeInputValueSetter) {
+    nativeInputValueSetter.call(input, value);
+  } else {
+    input.value = value;
+  }
+
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+  input.dispatchEvent(new Event('change', { bubbles: true }));
+}
+
 export const autofill = ({ root = document, profile }: Autofill) => {
   for (const { field, selectors } of FIELD_RULES) {
     if (!profile[field]) continue;
 
     const input = findInput(root, selectors);
-    if (input) input.value = profile[field];
+    if (input) setInputValue(input, profile[field]);
   }
 };

@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { autofill, FIELD_RULES } from './autofill';
 import type { Profile } from '../storage/storage';
 
@@ -70,5 +70,41 @@ describe('autofill()', () => {
     );
 
     expect(selectedInput?.value).toBe(expected);
+  });
+
+  it('calls prototype native value setter when filling input', () => {
+    const input = document.createElement('input');
+    input.setAttribute('name', 'name');
+    document.body.appendChild(input);
+
+    const handlerSpy = vi.spyOn(HTMLInputElement.prototype, 'value', 'set');
+
+    autofill({ profile, root: document });
+
+    expect(handlerSpy).toHaveBeenCalled();
+    handlerSpy.mockRestore();
+  });
+
+  it.each([
+    {
+      event: 'change',
+    },
+    {
+      event: 'input',
+    },
+  ])('dispatches bubbling $event event when filling input', ({ event }) => {
+    const input = document.createElement('input');
+    input.setAttribute('name', 'name');
+    document.body.appendChild(input);
+
+    const handlerSpy = vi.fn();
+
+    document.addEventListener(event, handlerSpy);
+
+    autofill({ profile, root: document });
+
+    expect(handlerSpy).toHaveBeenCalled();
+
+    document.removeEventListener(event, handlerSpy);
   });
 });
