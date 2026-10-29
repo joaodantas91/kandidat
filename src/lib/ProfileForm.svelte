@@ -37,37 +37,24 @@
 </script>
 
 <form on:submit={handleSubmit}>
-  <label>
-    Name
+  <div>
+    <label for="name"> Name </label>
     <input name="name" type="text" required />
-  </label>
-
-  <label>
-    Email
+  </div>
+  <div>
+    <label for="email"> Email </label>
     <input name="email" type="email" />
-  </label>
-
-  <label>
-    Phone
+  </div>
+  <div>
+    <label for="phone"> Phone </label>
     <input name="phone" type="tel" />
-  </label>
-
-  <label>
-    Linkedin
+  </div>
+  <div>
+    <label for="linkedin"> Linkedin </label>
     <input name="linkedin" type="url" />
-  </label>
+  </div>
   <button type="submit">Submit</button>
 </form>
 
 <style>
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  label {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-  }
 </style>

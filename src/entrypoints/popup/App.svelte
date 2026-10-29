@@ -1,9 +1,10 @@
 <script lang="ts">
+  import Tabs from '../../lib/components/tabs.svelte';
   import ProfileForm from '../../lib/ProfileForm.svelte';
 </script>
 
 <main>
-  <ProfileForm />
+  <Tabs />
 </main>
 
 <style>
