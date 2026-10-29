@@ -8,6 +8,9 @@ export default defineConfig({
     permissions: ['storage'],
   },
   webExt: {
-    chromiumArgs: ['--user-data-dir=./.wxt/chrome-data'],
+    chromiumArgs: [
+      '--user-data-dir=./.wxt/chrome-data',
+      '--ozone-platform-hint=auto',
+    ],
   },
 });

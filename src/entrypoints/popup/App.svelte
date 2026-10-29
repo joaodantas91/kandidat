@@ -9,8 +9,8 @@
 
 <style>
   main {
-    min-width: 320px;
-    min-height: 320px;
+    min-width: 200px;
+    min-height: 280px;
     display: flex;
     flex-direction: column;
     gap: 8px;
