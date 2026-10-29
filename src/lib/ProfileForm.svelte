@@ -39,22 +39,30 @@
 <form on:submit={handleSubmit}>
   <div>
     <label for="name"> Name </label>
-    <input name="name" type="text" required />
+    <input id="name" name="name" type="text" required />
   </div>
   <div>
     <label for="email"> Email </label>
-    <input name="email" type="email" />
+    <input id="email" name="email" type="email" />
   </div>
   <div>
     <label for="phone"> Phone </label>
-    <input name="phone" type="tel" />
+    <input id="phone" name="phone" type="tel" />
   </div>
   <div>
     <label for="linkedin"> Linkedin </label>
-    <input name="linkedin" type="url" />
+    <input id="linkedin" name="linkedin" type="url" />
   </div>
   <button type="submit">Submit</button>
 </form>
 
 <style>
+  form {
+    div {
+      margin-bottom: 8px;
+    }
+    label {
+      display: block;
+    }
+  }
 </style>

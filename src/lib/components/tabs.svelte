@@ -12,15 +12,17 @@
     (activeTabValue = tabValue);
 </script>
 
-<ul>
-  {#each tabs as tab}
-    <li>
-      <a role="tab" href="#tab" on:click={handleClick(tab.value)}>
-        {tab.label}
-      </a>
-    </li>
-  {/each}
-</ul>
+<nav>
+  <ul>
+    {#each tabs as tab}
+      <li>
+        <a role="tab" href="#tab" on:click={handleClick(tab.value)}>
+          {tab.label}
+        </a>
+      </li>
+    {/each}
+  </ul>
+</nav>
 
 {#each tabs as tab}
   {#if activeTabValue == tab.value}
@@ -31,4 +33,18 @@
 {/each}
 
 <style>
+  .box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 8px;
+  }
 </style>
