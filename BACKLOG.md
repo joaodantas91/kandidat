@@ -60,7 +60,7 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Files:** `src/core/autofill/autofill.ts`, `src/core/autofill/autofill.test.ts`, `wxt.config.ts`, `AUDIT.md`.
   - **Criteria:** Tests verify existing values are preserved; Sentinel marks issue resolved in `AUDIT.md`.
 
-- [ ] **TASK-10: Greenhouse Identity Adapter (Split Name + LinkedIn Question)**
+- [x] **TASK-10: Greenhouse Identity Adapter (Split Name + LinkedIn Question)**
   - **Goal:** Fill Greenhouse's `#first_name`, `#last_name`, `#email`, `#phone`, and LinkedIn question field from the saved profile, deriving first/last from `Profile.name`.
   - **Files:** `src/core/ats/greenhouse.ts`, `src/core/ats/greenhouse.test.ts`, `tests/fixtures/greenhouse-form.html`.
   - **Criteria:** Fixture-based tests fill the identity fields via native setters with bubbling `input`/`change` events; unrecognized custom `question_*` fields are left untouched; full suite passes.
