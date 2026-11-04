@@ -110,10 +110,10 @@ describe('fillWorkday', () => {
     fillWorkday(profile, document);
 
     expect(
-      input('[data-automation-id="legalNameSection_middleName"]')?.value,
+      input('[data-automation-id="legalNameSection_middleName"]')?.value ?? '',
     ).toBe('');
     expect(
-      input('[data-automation-id="workExperienceSection_jobTitle"]')?.value,
+      input('[data-automation-id="workExperienceSection_jobTitle"]')?.value ?? '',
     ).toBe('');
   });
 
@@ -162,7 +162,7 @@ describe('fillWorkday', () => {
     expect(input('[data-automation-id="phone-number"]')?.value).toBe('');
   });
 
-  it "no-ops when the My Information step is absent", () => {
+  it('no-ops when the My Information step is absent', () => {
     document.body.innerHTML = `
       <form data-automation-id="applyFlowPage">
         <input
@@ -267,9 +267,12 @@ describe('fillWorkday', () => {
     );
   });
 
-  it("fills work authorization yes from radio label", () => {
+  it('fills work authorization yes from radio label', () => {
     mountFixture();
 
     fillWorkday(profile, document);
 
-    const yesRadio = input('input[value="yes"]');
+    const yesRadio = input('input[value="yes"]') as HTMLInputElement;
+    expect(yesRadio?.checked).toBe(true);
+  });
+});

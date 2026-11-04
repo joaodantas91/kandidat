@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { resolveIdentity, resolveLocation, resolveLinks, resolveWorkAuthorization, setFieldValue } from './fieldMapping';
+import type { Profile } from '../storage/storage';
 
 const baseProfile: Profile = {
   name: 'John Doe',
@@ -88,7 +89,7 @@ describe('resolveLocation', () => {
   });
 
   it('short mode with empty profile location', () => {
-    const result = resolveLocation({}, 'short');
+    const result = resolveLocation({} as Profile, 'short');
     expect(result).toBe('');
   });
 
