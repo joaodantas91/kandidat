@@ -226,3 +226,16 @@ _No blocking or security issues. LOW-severity hardening items are recorded below
   - `[INFO]` Zero code duplication: reuses `setElementValue` and `answerQuestion`.
   - `[INFO]` No Manifest V3 permission escalation.
 - Status: **Core invariants verified clean**.
+
+---
+
+## Audit: TASK-17 Expanded Profile Schema & Storage (2026-11-04)
+
+- Audited commit range: `e9b5d20..f04c80e`
+- Findings:
+  - `[INFO]` Safe type-guarding: added `typeof fieldValue === 'string'` in `autofill.ts` to prevent object/number leakage into DOM setters.
+  - `[INFO]` Zero DOM injection risks.
+  - `[INFO]` No prototype pollution or unsafe setter overrides.
+  - `[INFO]` No Manifest V3 permission escalation.
+  - `[INFO]` Zero code duplication: reuses `splitName` from `setter.ts`.
+- Status: **Core invariants verified clean**.
