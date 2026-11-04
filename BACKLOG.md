@@ -95,7 +95,7 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Files:** `src/core/ats/jobContext.ts`, `src/core/ats/jobContext.test.ts`, `tests/fixtures/{greenhouse,lever,workday}-job.html`.
   - **Criteria:** Fixture tests return title/company/description for each platform; whitespace is trimmed and description capped; unsupported pages return `null`.
 
-- [ ] **TASK-15: Application Tracker on Submit Confirmation**
+- [x] **TASK-15: Application Tracker on Submit Confirmation**
   - **Goal:** Detect ATS confirmation screens and persist `{company, role, url, ats, appliedAt}` to local storage so the candidate sees a list of submitted applications in the popup.
   - **Files:** `src/core/ats/confirmation.ts`, `src/core/ats/confirmation.test.ts`, `src/core/storage/applications.ts`, `src/core/storage/applications.test.ts`, `src/lib/applications.svelte`, `src/entrypoints/popup/App.svelte`.
   - **Criteria:** Confirmation fixtures for Lever (`/thanks`, `[data-qa="msg-submit-success"]`), Greenhouse (`#application_confirmation` or "Thank you for applying"), and Workday (`[data-automation-id="applyFlowCongratsPage"]`); entries deduped by URL; popup renders the stored list; tests pass.
