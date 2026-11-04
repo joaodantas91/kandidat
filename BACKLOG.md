@@ -21,7 +21,7 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Files:** `src/core/autofill/autofill.ts`, `src/core/autofill/autofill.test.ts`.
   - **Criteria:** Unit tests in vitest pass for textarea and select elements.
 
-- [ ] **TASK-04: LinkedIn Clean Job Feed Filter Integration**
+- [x] **TASK-04: LinkedIn Clean Job Feed Filter Integration**
   - **Goal:** Content script on LinkedIn job search that hides spam/outsourcing listings.
   - **Files:** `src/entrypoints/linkedin.content.ts`.
   - **Criteria:** Basic DOM filtering with clean error boundaries.
