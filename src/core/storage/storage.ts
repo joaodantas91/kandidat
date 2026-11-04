@@ -165,7 +165,9 @@ export const updateProfile = async (patch: Partial<Profile>): Promise<Profile> =
   const existing = await profile.getValue();
   if (!existing) {
     await setProfile(patch as Profile);
-    return await getProfile();
+  const result = await getProfile();
+  if (!result) throw new ProfileValidationError('Failed to retrieve updated profile');
+  return result;
   }
   const merged = { ...existing, ...patch };
   const normalized = normalizeProfile(merged);

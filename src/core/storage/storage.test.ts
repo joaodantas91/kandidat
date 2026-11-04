@@ -129,7 +129,7 @@ describe('updateProfile', () => {
 
   it('preserves unknown top-level keys', async () => {
     fakeBrowser.reset();
-    await setProfile({ name: 'John', extraKey: 'preserved' });
+    await setProfile({ name: 'John', extraKey: 'preserved' } as any);
     await updateProfile({ phone: '123' });
     const profile = await getProfile();
     expect((profile as any)?.extraKey).toBe('preserved');
