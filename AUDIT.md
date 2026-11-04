@@ -6,6 +6,20 @@ _No blocking or security issues. Core invariants verified clean._
 
 ---
 
+## Audit — TASK-18 & TASK-TS-01 (Diff `0c5a9c2..HEAD`)
+
+**Result:** No critical/high/medium findings. Core invariants verified clean by Sentinel (powered by Google Gemini Flash Lite).
+
+### Verified clean
+
+- **DOM injection — clean.** No changes introduce `innerHTML`, `outerHTML`, or unescaped template literals.
+- **Prototype safety — clean.** No prototype modifications or native setter overrides added.
+- **Manifest V3 permission escalation — clean.** No changes to `manifest.json` or permissions.
+- **Code duplication (PONYTAIL Rung 2) — clean.** No redundant helper utilities added.
+- **Strict typing invariants — clean.** Zero instances of `as any` or `@ts-ignore` remain in codebase.
+
+---
+
 ## Audit — TASK-TS-01 (Zero `as any` Elimination, diff `5ec4090..HEAD`)
 
 **Result:** No critical/high/medium findings. Core invariants verified clean.
