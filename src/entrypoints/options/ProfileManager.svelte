@@ -655,13 +655,15 @@
   <fieldset class="profile-fieldset" aria-labelledby="workAuth-legend">
     <legend id="workAuth-legend">Work Authorization</legend>
 
-    <div class="form-group">
-<input
+<div class="form-group">
+      <input
         type="checkbox"
         name="authorizedToWork"
-        bind:checked={authorizedToWork}
-/>
-
+        checked={authorizedToWork}
+        onchange={(e) => {
+          authorizedToWork = (e.target as HTMLInputElement).checked;
+        }}
+      />
       <span>Authorized to Work</span>
     </div>
 
@@ -704,8 +706,11 @@
       <input
         type="checkbox"
         name="willingToRelocate"
-        bind:checked={willingToRelocate}
-/>
+        checked={willingToRelocate}
+        onchange={(e) => {
+          willingToRelocate = (e.target as HTMLInputElement).checked;
+        }}
+      />
       <span>Willing to Relocate</span>
     </div>
 
@@ -713,8 +718,11 @@
       <input
         type="checkbox"
         name="willingToTravel"
-        bind:checked={willingToTravel}
-/>
+        checked={willingToTravel}
+        onchange={(e) => {
+          willingToTravel = (e.target as HTMLInputElement).checked;
+        }}
+      />
       <span>Willing to Travel</span>
     </div>
   </fieldset>
