@@ -83,6 +83,8 @@ export const autofill = ({ root = document, profile }: Autofill) => {
     if (!profile[field]) continue;
 
     const input = findInput(root, selectors);
-    if (input) setInputValue(input, profile[field]);
+    if (input && input.value.trim().length === 0) {
+      setInputValue(input, profile[field]);
+    }
   }
 };

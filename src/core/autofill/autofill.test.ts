@@ -72,6 +72,44 @@ describe('autofill()', () => {
     expect(selectedInput?.value).toBe(expected);
   });
 
+  it.each([
+    { field: 'name', id: 'name', existing: 'Jane Doe' },
+    { field: 'email', id: 'email', existing: 'jane@doe.com' },
+    { field: 'phone', id: 'phone', existing: '888888' },
+    {
+      field: 'linkedin',
+      id: 'linkedin',
+      existing: 'www.linkedin.com/jane-doe',
+    },
+  ])('does not overwrite existing $field value', ({ id, existing }) => {
+    const input = document.createElement('input');
+    input.setAttribute('id', id);
+    input.value = existing;
+    document.body.appendChild(input);
+
+    autofill({ profile, root: document });
+
+    expect(document.querySelector<HTMLInputElement>(`#${id}`)?.value).toBe(
+      existing,
+    );
+  });
+
+  it('fills empty fields while preserving populated ones', () => {
+    const nameInput = document.createElement('input');
+    nameInput.setAttribute('id', 'name');
+    nameInput.value = 'Jane Doe';
+    document.body.appendChild(nameInput);
+
+    const emailInput = document.createElement('input');
+    emailInput.setAttribute('id', 'email');
+    document.body.appendChild(emailInput);
+
+    autofill({ profile, root: document });
+
+    expect(nameInput.value).toBe('Jane Doe');
+    expect(emailInput.value).toBe(profile.email);
+  });
+
   it('calls prototype native value setter when filling input', () => {
     const input = document.createElement('input');
     input.setAttribute('name', 'name');
