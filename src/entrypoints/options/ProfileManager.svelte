@@ -656,11 +656,11 @@
     <legend id="workAuth-legend">Work Authorization</legend>
 
     <div class="form-group">
-      <input
+<input
         type="checkbox"
         name="authorizedToWork"
-        checked={authorizedToWork}
-      />
+        bind:checked={authorizedToWork}
+/>
 
       <span>Authorized to Work</span>
     </div>
