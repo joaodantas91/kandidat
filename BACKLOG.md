@@ -258,7 +258,7 @@ Important form behaviors:
   - **Files:** `src/core/storage/storage.test.ts`, `src/entrypoints/content.test.ts`, `src/core/storage/storage.ts`.
   - **Criteria:** Zero occurrences of `as any` in `src/` (`! grep -rn "as any" src/`); proper mock typing used for `ContentScriptContext`; index signature `Record<string, unknown>` used for unknown storage keys; `bunx vitest run` passes and `bun run check` exits with 0 errors.
 
-- [ ] **TASK-19: ATS Adapter Field Mapping for Location, Links, and Work Authorization**
+- [x] **TASK-19: ATS Adapter Field Mapping for Location, Links, and Work Authorization**
   - **Goal:** Extend the Lever, Greenhouse, and Workday adapters beyond identity fields to fill structured location, portfolio/GitHub/website links, and explicit work-authorization/sponsorship answers. Keep unknown custom questions untouched and never guess legal answers.
   - **Files:** `src/core/ats/types.ts`, `src/core/ats/fieldMapping.ts` (new), `src/core/ats/fieldMapping.test.ts` (new), `src/core/ats/lever.ts`, `src/core/ats/lever.test.ts`, `src/core/ats/greenhouse.ts`, `src/core/ats/greenhouse.test.ts`, `src/core/ats/workday.ts`, `src/core/ats/workday.test.ts`, `tests/fixtures/{lever,greenhouse,workday}-form.html`.
   - **Shared mapper (`fieldMapping.ts`):**
