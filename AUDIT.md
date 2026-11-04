@@ -35,11 +35,30 @@ _No blocking or security issues. LOW-severity hardening items are recorded below
   - **Detail:** no entrypoint imports `detectAts` or the `fill*` functions, and the platform adapters omit the optional `fill` member. TASK-10..12 code is inert today, so there is no runtime exposure, but detection and filling are not actually connected.
   - **Resolution:** TASK-13 added the `fillApplication` dispatcher and routed both `content.ts` and `floating.content.ts` through it.
 
-### Verification
+- [x] **[TASK-14] Job Context Extractor DOM safety**
+  - **Location:** `src/core/ats/jobContext.ts`
+  - **Detail:** Production code uses `Node.textContent` via `querySelector`; no `innerHTML`, `outerHTML`, `insertAdjacentHTML`, or `eval`. Whitespace is normalized via `.trim()`. Error boundary returns `null` when no ATS adapter matches.
+  - **Resolution:** Extractor verified clean; tests pass (6/6).
 
-- `bunx vitest run` — 9 files, 112 tests passed.
-- `bun run check` — 0 errors, 0 warnings.
-- `bun run build` — succeeded; scoped manifest confirmed.
+---
+
+## Audit — Job Context Extractor (TASK-14, diff `4fe6eb9..HEAD`)
+
+**Result:** DOM text extraction uses `textContent` only; whitespace trimmed; null returned for unsupported pages. No injection vectors.
+
+### Verified clean
+
+- **DOM injection — clean.** Production code uses `Node.textContent` via `querySelector`; no `innerHTML`, `outerHTML`, `insertAdjacentHTML`, or `eval` anywhere in `src/core/ats/jobContext.ts`. Fixture mounting in tests uses `innerHTML` but is isolated test infrastructure.
+- **Whitespace normalization — clean.** All three extractors (`extractCompany`, `extractTitle`, `extractDescription`) apply `.trim()` to returned values, normalizing intra-word and trailing whitespace.
+- **Error boundary — clean.** `detectAts` returns `null` when no ATS platform matches (malformed URL, unknown host). `extractJobContext` returns `null` if no adapter is selected, providing a clear null boundary for callers.
+- **Test pass — confirmed.** 6/6 tests pass via `bunx vitest run`.
+
+### Findings
+
+- [ ] **[INFO] Test fixture mounting uses innerHTML**
+  - **Location:** `src/core/ats/jobContext.test.ts:23` (`mountFixture` sets `root.innerHTML = parsed.body.innerHTML`)
+  - **Detail:** The `mountFixture` helper uses `innerHTML` to mount HTML fixtures into the DOM for tests. This is test-only infrastructure; the production extractor (`jobContext.ts`) never uses `innerHTML` — it only reads `textContent` via `querySelector`. No runtime injection risk.
+  - **Resolution:** Acceptable as test fixture practice; production code is clean.
 
 ---
 
@@ -122,7 +141,7 @@ _No blocking or security issues. LOW-severity hardening items are recorded below
 - [ ] **[INFO] Entrypoint test-filter regex covers `.test.` only**
   - **Location:** `wxt.config.ts:20-25`
   - **Detail:** `entrypoints:found` strips `/\.test\.[jt]sx?$/` so colocated tests are not treated as content scripts. A future `.spec.ts` file would slip through and be emitted as an entrypoint.
-  - **Fix:** broaden to `\.(test|spec)\.`.
+  - **Fix:** broaden to `\.(test|spec)\.`
 
 ### Verification
 
