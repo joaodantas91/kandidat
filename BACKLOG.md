@@ -65,7 +65,7 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Files:** `src/core/ats/greenhouse.ts`, `src/core/ats/greenhouse.test.ts`, `tests/fixtures/greenhouse-form.html`.
   - **Criteria:** Fixture-based tests fill the identity fields via native setters with bubbling `input`/`change` events; unrecognized custom `question_*` fields are left untouched; full suite passes.
 
-- [ ] **TASK-11: Lever Identity Adapter**
+- [x] **TASK-11: Lever Identity Adapter**
   - **Goal:** Fill Lever's `#application-form` fields `name`, `email`, `phone`, `org`, and `urls[LinkedIn]` from the saved profile.
   - **Files:** `src/core/ats/lever.ts`, `src/core/ats/lever.test.ts`, `tests/fixtures/lever-form.html`.
   - **Criteria:** Fixture tests fill the five named fields; custom `.application-question` fields are left untouched; native setter path verified; full suite passes.
