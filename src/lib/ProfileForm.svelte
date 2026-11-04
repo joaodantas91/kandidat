@@ -1,5 +1,12 @@
 <script lang="ts">
-  import { setProfile, type Profile } from '@/core/storage/storage';
+  import { onMount } from 'svelte';
+  import { getProfile, setProfile, type Profile } from '@/core/storage/storage';
+
+  let profile: Profile | null = null;
+
+  onMount(async () => {
+    profile = await getProfile();
+  });
 
   function getTextField<T extends keyof Profile>(
     data: FormData,
@@ -25,33 +32,34 @@
     const phone = getTextField(data, 'phone');
     const linkedin = getTextField(data, 'linkedin');
 
-    const profile: Profile = {
+    const updatedProfile: Profile = {
       name,
       ...(email && { email }),
       ...(phone && { phone }),
       ...(linkedin && { linkedin }),
     };
 
-    setProfile(profile);
+    await setProfile(updatedProfile);
+    profile = updatedProfile;
   }
 </script>
 
 <form on:submit={handleSubmit}>
   <div>
     <label for="name"> Name </label>
-    <input id="name" name="name" type="text" required />
+    <input id="name" name="name" type="text" value={profile?.name ?? ''} required />
   </div>
   <div>
     <label for="email"> Email </label>
-    <input id="email" name="email" type="email" />
+    <input id="email" name="email" type="email" value={profile?.email ?? ''} />
   </div>
   <div>
     <label for="phone"> Phone </label>
-    <input id="phone" name="phone" type="tel" />
+    <input id="phone" name="phone" type="tel" value={profile?.phone ?? ''} />
   </div>
   <div>
     <label for="linkedin"> Linkedin </label>
-    <input id="linkedin" name="linkedin" type="url" />
+    <input id="linkedin" name="linkedin" type="url" value={profile?.linkedin ?? ''} />
   </div>
   <button type="submit">Submit</button>
 </form>
