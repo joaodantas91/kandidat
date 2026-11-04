@@ -25,3 +25,13 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Goal:** Content script on LinkedIn job search that hides spam/outsourcing listings.
   - **Files:** `src/entrypoints/linkedin.content.ts`.
   - **Criteria:** Basic DOM filtering with clean error boundaries.
+
+- [x] **TASK-05: Options Page with Customizable Keyword Filters & Profile Settings**
+  - **Goal:** Provide a dedicated Options page in Svelte 5 for Kandidat where users can view and customize blacklist keywords for job filtering and manage advanced settings.
+  - **Files:** `src/entrypoints/options/index.html`, `src/entrypoints/options/main.ts`, `src/entrypoints/options/Options.svelte`, `src/core/storage/settings.ts`.
+  - **Criteria:** `wxt build` compiles options page cleanly; default blacklist keywords are loaded with fallback; vitest tests pass.
+
+- [ ] **TASK-06: AI Question Answerer Core Module (LiteLLM Integration)**
+  - **Goal:** Create core module for querying LiteLLM local proxy (`http://localhost:4000/v1`) with job application prompt and candidate experience context.
+  - **Files:** `src/core/ai/answerer.ts`, `src/core/ai/answerer.test.ts`.
+  - **Criteria:** Unit tests with mocked fetch pass with exit code 0.

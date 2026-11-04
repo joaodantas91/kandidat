@@ -1,20 +1,28 @@
+import {
+  DEFAULT_BLACKLIST_KEYWORDS,
+  getSettings,
+} from '@/core/storage/settings';
+
 export default defineContentScript({
   matches: [
     '*://*.linkedin.com/jobs/*',
     '*://*.linkedin.com/search/results/content/*',
   ],
-  main() {
-    const NOISE_KEYWORDS = [
-      'aberto a oportunidades',
-      'procurando recolocação',
-      'open to work',
-      'curso',
-      'mentoria',
-      'bootcamp',
-      'bairesdev',
-      'turing',
-      'crossover',
-    ];
+  async main() {
+    let keywords = DEFAULT_BLACKLIST_KEYWORDS;
+    let autoFilterEnabled = true;
+
+    try {
+      const settings = await getSettings();
+      keywords = settings.blacklistKeywords ?? DEFAULT_BLACKLIST_KEYWORDS;
+      autoFilterEnabled = settings.autoFilterEnabled ?? true;
+    } catch {
+      // fallback to defaults
+    }
+
+    if (!autoFilterEnabled) {
+      return;
+    }
 
     function filterPosts(root: ParentNode = document) {
       const selectors = [
@@ -30,7 +38,9 @@ export default defineContentScript({
         const text = el.innerText?.toLowerCase();
         if (!text) continue;
 
-        const isSpam = NOISE_KEYWORDS.some((keyword) => text.includes(keyword));
+        const isSpam = keywords.some((keyword) =>
+          text.includes(keyword.toLowerCase()),
+        );
         if (isSpam) {
           el.style.display = 'none';
           el.dataset.kandidatFiltered = 'hidden';
