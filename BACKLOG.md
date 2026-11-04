@@ -41,7 +41,7 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Files:** `src/core/autofill/fieldDetector.ts`, `src/core/autofill/fieldDetector.test.ts`.
   - **Criteria:** Unit tests pass with synthetic DOM fixtures; returns typed element map.
 
-- [ ] **TASK-08: Floating "Fill Profile" Action Button for ATS Portals**
+- [x] **TASK-08: Floating "Fill Profile" Action Button for ATS Portals**
   - **Goal:** Inject a clean, isolated floating button into supported ATS portals (Lever, Greenhouse, Workday) triggering autofill.
   - **Files:** `src/entrypoints/floating.content.ts`.
   - **Criteria:** Mutation-safe injection that does not conflict with host styles.
