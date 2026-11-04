@@ -282,6 +282,17 @@ Important form behaviors:
     - Recognized compensation/experience questions (minimum/current annual salary, notice period, available start date, years of experience) may be filled only when labels are exact known matches.
   - **Criteria:** New fixture cases cover location, each link type, authorized yes/no, sponsorship now/future, and an unknown custom question that must stay untouched. Adapter tests prove native setters and `input`/`change` events are used, hidden fields and lat/long are never written, missing work-authorization answers are never guessed, and Workday performs no navigation/submission. Existing adapter tests still pass; `bunx vitest run` and `bun run check` pass; no new manifest permissions.
 
+- [ ] **TASK-UI-01: Modernize Candidate Profile Form UI to Match Options Design Language**
+  - **Goal:** Redesign `src/entrypoints/options/ProfileManager.svelte` to match the dark-theme aesthetic, visual hierarchy, and component styling of the Keyword Filters tab in `Options.svelte`.
+  - **Files:** `src/entrypoints/options/ProfileManager.svelte`, `src/entrypoints/options/ProfileManager.test.ts`.
+  - **UX/UI Specifications (Designer Persona):**
+    - **Layout:** Responsive 2-column CSS Grid (`repeat(auto-fit, minmax(240px, 1fr))`) for compact fields (identity, phone, email, address, city, country, postal code, salary), full-width for textareas (summary) and link rows.
+    - **Cards & Fieldsets:** Replace unstyled HTML fieldsets with sleek dark cards (`background: #111; border: 1px solid #282828; border-radius: 6px; padding: 20px; margin-bottom: 20px;`). Clean uppercase section headers (`color: #eaeaea; font-size: 0.9rem; font-weight: 600;`).
+    - **Form Controls:** Form inputs, selects, and textareas styled to match `Options.svelte` (`background: #1a1a1a; border: 1px solid #333; color: #eaeaea; border-radius: 4px; padding: 8px 12px; font-size: 0.95rem;`). White glow focus state (`outline: none; border-color: #fff;`).
+    - **Actions & Feedback:** Prominent primary Save button (`background: #2c7be5; color: #fff; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer;`) with disabled state when pristine, Reset button, and integration with the Toast notification system (`showToast('Profile saved successfully', 'success')`).
+    - **Strict Invariants:** Zero `as any`, zero `@ts-ignore`, pure Svelte 5 runes (`$state`, `$derived`, `$props`), zero new npm dependencies.
+  - **Criteria:** Tests verify form renders in dark theme, inputs remain fully accessible with proper `id` and `label` associations, validation still works, and `bunx vitest run` passes with exit code 0.
+
 - [ ] **TASK-22: Profile-Powered Inline Quick Fill Action Bar**
   - **Goal:** Inject a lightweight floating action bar on supported ATS pages when form fields are detected, providing a one-click "Fill Form" button and a dropdown preview of the candidate's active profile data.
   - **Files:** `src/entrypoints/floating.content.ts`, `src/lib/components/QuickFillBar.svelte`, `src/core/autofill/fieldDetector.ts`.
