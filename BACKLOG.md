@@ -253,7 +253,7 @@ Important form behaviors:
     - Keep all labels programmatically associated; group related fields; keyboard-accessible; no new dependencies.
   - **Criteria:** Tests mount the manager with `fakeBrowser`, verify all sections/fields render, legacy profiles populate correctly, nested values round-trip through save, invalid email/URL/salary input is rejected, empty work-authorization remains unset, and unknown profile keys survive a save. Options tab test still passes; `wxt build`, `bunx vitest run`, and `bun run check` pass.
 
-- [ ] **TASK-TS-01: Zero 'as any' Elimination & Strict TypeScript Audit**
+- [x] **TASK-TS-01: Zero 'as any' Elimination & Strict TypeScript Audit**
   - **Goal:** Clean up all existing code smells and eradicate every instance of `as any` across the repository (`src/core/storage/storage.test.ts`, `src/entrypoints/content.test.ts`, etc.).
   - **Files:** `src/core/storage/storage.test.ts`, `src/entrypoints/content.test.ts`, `src/core/storage/storage.ts`.
   - **Criteria:** Zero occurrences of `as any` in `src/` (`! grep -rn "as any" src/`); proper mock typing used for `ContentScriptContext`; index signature `Record<string, unknown>` used for unknown storage keys; `bunx vitest run` passes and `bun run check` exits with 0 errors.
