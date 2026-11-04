@@ -22,9 +22,6 @@ const LINK_SELECTORS = {
   website: '[data-automation-id="website"]',
 };
 
-const QUESTION_FIELD = /(^|[\s_-])question_/i;
-const AUTH_TEXT = /(legally\s+authorized|sponsorship)/i;
-
 const findInput = (root: ParentNode, selector: string) => {
   return root.querySelector<HTMLInputElement>(selector);
 };
@@ -37,7 +34,7 @@ const fillField = (
   if (!value) return;
 
   const input = root.querySelector<HTMLInputElement>(selector);
-  if (input && input.value.trim().length === 0) setFieldValue(input, value);
+  if (input && (input.value || '').trim().length === 0) setFieldValue(input, value);
 };
 
 export const fillWorkday = (profile: Profile, root: ParentNode = document) => {
@@ -68,18 +65,18 @@ export const fillWorkday = (profile: Profile, root: ParentNode = document) => {
     const city = locationParts[2]!.trim();
     if (city) fillField(root, WORKDAY_FIELD_SELECTORS.city, city);
   }
-  if (locationParts.length >= 4) {
-    const statePostal = locationParts[3]!.trim();
-    if (statePostal) fillField(root, WORKDAY_FIELD_SELECTORS.postalCode, statePostal);
-  }
   if (locationParts.length >= 5) {
-    const country = locationParts[4]!.trim();
+    const postal = locationParts[4]!.trim();
+    if (postal) fillField(root, WORKDAY_FIELD_SELECTORS.postalCode, postal);
+  }
+  if (locationParts.length >= 6) {
+    const country = locationParts[5]!.trim();
     if (country) fillField(root, WORKDAY_FIELD_SELECTORS.countryRegion, country);
   }
 
   for (const [key, selector] of Object.entries(LINK_SELECTORS)) {
     const input = findInput(root, selector);
-    if (input && input.value.trim().length === 0) {
+    if (input && (input.value || '').trim().length === 0) {
       const links = resolveLinks(profile);
       setFieldValue(input, links[key] || '');
     }
@@ -89,10 +86,23 @@ export const fillWorkday = (profile: Profile, root: ParentNode = document) => {
     HTMLInputElement
   >('input[type="radio"], input[type="select"]');
   for (const radio of authRadios) {
-    const label = radio.labels?.[0]?.textContent || '';
-    const wa = resolveWorkAuthorization(profile, label);
+    const labelText = radio.labels?.[0]?.textContent || radio.closest('label')?.textContent || '';
+    const wa = resolveWorkAuthorization(profile, labelText);
     if (wa === 'yes' || wa === 'no') {
-      setFieldValue(radio, wa);
+      if (radio.type === 'radio') {
+        const lowerLabel = labelText.toLowerCase();
+        const isYesRadio = radio.value === 'yes' || lowerLabel.includes('yes');
+        const isNoRadio = radio.value === 'no' || (lowerLabel.includes('no') && !lowerLabel.includes('sponsorship'));
+        if (wa === 'yes' && isYesRadio) {
+          radio.checked = true;
+          radio.dispatchEvent(new Event('change', { bubbles: true }));
+        } else if (wa === 'no' && isNoRadio && profile.workAuthorization?.authorizedToWork === false) {
+          radio.checked = true;
+          radio.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+      } else {
+        setFieldValue(radio, wa);
+      }
     }
   }
 };
