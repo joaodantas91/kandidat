@@ -75,6 +75,11 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Files:** `src/core/ats/workday.ts`, `src/core/ats/workday.test.ts`, `tests/fixtures/workday-my-information.html`.
   - **Criteria:** Fixture tests map `legalNameSection_firstName`, `legalNameSection_lastName`, `email`, and `phone-number`; adapter no-ops when the step is absent; no navigation or submit calls.
 
+- [ ] **TASK-REFACTOR-01: Shared DOM Setter & Name Utilities (PONYTAIL Rung 2)**
+  - **Goal:** Extract duplicated `setInputValue`, `getNativeSetter`, and `splitName` from `src/core/ats/{lever,greenhouse,workday}.ts` and `src/core/autofill/autofill.ts` into a single shared utility module (`src/core/dom/setter.ts`).
+  - **Files:** `src/core/dom/setter.ts`, `src/core/dom/setter.test.ts`, `src/core/ats/lever.ts`, `src/core/ats/greenhouse.ts`, `src/core/ats/workday.ts`, `src/core/autofill/autofill.ts`.
+  - **Criteria:** All existing 112 Vitest tests pass with exit code 0. Zero code duplication in value setters or name splitting across modules.
+
 - [ ] **TASK-13: Route AUTO_FILL Through Detected ATS Adapter with Heuristic Fallback**
   - **Goal:** On `AUTO_FILL`, run the detected ATS adapter; fall back to the existing core autofill on unsupported pages. Reuse the same path for the TASK-08 floating button.
   - **Files:** `src/core/ats/index.ts`, `src/entrypoints/content.ts`, `src/entrypoints/content.test.ts`, `src/entrypoints/floating.content.ts`.
