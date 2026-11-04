@@ -1,5 +1,5 @@
 import type { Profile } from '../storage/storage';
-import { setInputValue, splitName } from '../dom/setter';
+import { resolveLocation, resolveLinks, resolveWorkAuthorization, setFieldValue, splitName } from '../ats/fieldMapping';
 
 export { splitName };
 
@@ -29,21 +29,22 @@ const PHONE_SELECTORS = [
   'input[name="phone"]',
 ];
 
-const LINKEDIN_SELECTORS = [
-  '#linkedin',
-  'input[name*="linkedin" i]',
-  'input[autocomplete="linkedin"]',
+const LOCATION_SELECTORS = [
+  'input[name="job_application[location]"]',
+  '#location',
+  'input[name="location"]',
+  'input[autocomplete*="address" i]',
 ];
 
 const QUESTION_FIELD = /(^|[\s_-])question_/i;
 const LINKEDIN_TEXT = /linked\s*in/i;
+const AUTH_TEXT = /(legally\s+authorized|sponsorship)/i;
 
 const findInput = (root: ParentNode, selectors: readonly string[]) => {
   for (const selector of selectors) {
     const input = root.querySelector<HTMLInputElement>(selector);
     if (input) return input;
   }
-
   return null;
 };
 
@@ -54,9 +55,14 @@ const labelText = (input: HTMLInputElement) => {
       .map((label) => label.textContent ?? '')
       .join(' ');
   }
-
   return input.closest('label')?.textContent ?? '';
 };
+
+const LINKEDIN_SELECTORS = [
+  '#linkedin',
+  'input[name*="linkedin" i]',
+  'input[autocomplete="linkedin"]',
+];
 
 const findLinkedInQuestion = (root: ParentNode) => {
   const direct = findInput(root, LINKEDIN_SELECTORS);
@@ -78,6 +84,22 @@ const findLinkedInQuestion = (root: ParentNode) => {
   return null;
 };
 
+const findAuthQuestion = (root: ParentNode) => {
+  for (const input of root.querySelectorAll<HTMLInputElement>('input')) {
+    if (!QUESTION_FIELD.test(`${input.name} ${input.id}`)) continue;
+
+    const context = [
+      labelText(input),
+      input.getAttribute('aria-label'),
+      input.getAttribute('placeholder'),
+      input.getAttribute('title'),
+    ].join(' ');
+
+    if (AUTH_TEXT.test(context)) return input;
+  }
+  return null;
+};
+
 const fillField = (
   root: ParentNode,
   selectors: readonly string[],
@@ -86,7 +108,7 @@ const fillField = (
   if (!value) return;
 
   const input = findInput(root, selectors);
-  if (input && input.value.trim().length === 0) setInputValue(input, value);
+  if (input && input.value.trim().length === 0) setFieldValue(input, value);
 };
 
 export const fillGreenhouse = (
@@ -100,10 +122,30 @@ export const fillGreenhouse = (
   fillField(root, EMAIL_SELECTORS, profile.email);
   fillField(root, PHONE_SELECTORS, profile.phone);
 
-  if (!profile.linkedin) return;
+  fillField(root, LOCATION_SELECTORS, resolveLocation(profile, 'short'));
 
-  const linkedin = findLinkedInQuestion(root);
-  if (linkedin && linkedin.value.trim().length === 0) {
-    setInputValue(linkedin, profile.linkedin);
+  if (profile.linkedin) {
+    const linkedin = findLinkedInQuestion(root);
+    if (linkedin && linkedin.value.trim().length === 0) {
+      setFieldValue(linkedin, profile.linkedin);
+    }
+  }
+
+  const authInput = findAuthQuestion(root);
+  if (authInput) {
+    const wa = resolveWorkAuthorization(profile, labelText(authInput) || '');
+    if (wa === 'yes' || wa === 'no') {
+      setFieldValue(authInput, wa);
+    }
+  }
+
+  const links = resolveLinks(profile);
+  for (const [key, value] of Object.entries(links)) {
+    const linkInput = root.querySelector<HTMLInputElement>(
+      `input[name*="${key}"], input[id*="${key}"]`,
+    );
+    if (linkInput && linkInput.value.trim().length === 0) {
+      setFieldValue(linkInput as HTMLInputElement, value);
+    }
   }
 };

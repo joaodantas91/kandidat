@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fillLever, type LeverProfile } from './lever';
+import { resolveIdentity } from './fieldMapping';
 
 const fixture = readFileSync(resolve('tests/fixtures/lever-form.html'), 'utf8');
 
@@ -10,7 +11,12 @@ const profile: LeverProfile = {
   email: 'john@doe.com',
   phone: '999999',
   org: 'Acme Inc',
+  location: 'San Francisco, CA, USA',
   linkedin: 'www.linkedin.com/in/john-doe',
+  workAuthorization: {
+    authorizedToWork: true,
+    sponsorshipRequired: 'none',
+  },
 };
 
 const input = (selector: string) =>
@@ -36,6 +42,27 @@ describe('fillLever()', () => {
     expect(input('#phone')?.value).toBe(profile.phone);
     expect(input('#org')?.value).toBe(profile.org);
     expect(input('input[name="urls[LinkedIn]"]')?.value).toBe(profile.linkedin);
+  });
+
+  it('fills location in short format', () => {
+    mountFixture();
+
+    fillLever(profile, document);
+
+    const locationInput = input('#location') || input('input[name="location"]');
+    expect(locationInput?.value).toBe('San Francisco, CA, USA');
+  });
+
+  it('fills LinkedIn, GitHub, Portfolio, Website, Twitter, Other links', () => {
+    mountFixture();
+
+    fillLever(profile, document);
+
+    expect(input('input[name="urls[GitHub]"]')?.value).toBe(profile.links?.github || '');
+    expect(input('input[name="urls[Portfolio]"]')?.value).toBe(profile.links?.portfolio || '');
+    expect(input('input[name="urls[Website]"]')?.value).toBe(profile.links?.website || '');
+    expect(input('input[name="urls[Twitter]"]')?.value).toBe(profile.links?.twitter || '');
+    expect(input('input[name="urls[Other]"]')?.value).toBe(profile.links?.other || '');
   });
 
   it('leaves custom application questions untouched', () => {
@@ -119,5 +146,53 @@ describe('fillLever()', () => {
 
     expect(input('#name')?.value).toBe('Jane Roe');
     expect(input('#email')?.value).toBe('jane@example.com');
+  });
+
+  it('fills work authorization yes on custom card', () => {
+    document.body.innerHTML = `
+      <form id="application-form">
+        <card>
+          <input type="radio" name="auth" value="yes" />
+          <input type="radio" name="auth" value="no" />
+          <label>Are you legally authorized to work?</label>
+        </card>
+      </form>
+    `;
+    const profileWithAuth: LeverProfile = {
+      ...profile,
+      workAuthorization: {
+        authorizedToWork: true,
+        sponsorshipRequired: 'none',
+      },
+    };
+
+    fillLever(profileWithAuth, document);
+
+    const yesRadio = document.querySelector('card input[type="radio"][value="yes"]');
+    expect(yesRadio?.value).toBe('yes');
+  });
+
+  it('fills work authorization no on custom card', () => {
+    document.body.innerHTML = `
+      <form id="application-form">
+        <card>
+          <input type="radio" name="auth" value="yes" />
+          <input type="radio" name="auth" value="no" />
+          <label>Are you legally authorized to work?</label>
+        </card>
+      </form>
+    `;
+    const profileNoAuth: LeverProfile = {
+      ...profile,
+      workAuthorization: {
+        authorizedToWork: false,
+        sponsorshipRequired: 'none',
+      },
+    };
+
+    fillLever(profileNoAuth, document);
+
+    const noRadio = document.querySelector('card input[type="radio"][value="no"]');
+    expect(noRadio?.value).toBe('no');
   });
 });
