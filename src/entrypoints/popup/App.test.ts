@@ -1,8 +1,8 @@
+import type { Application } from '../../core/storage/applications';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount, unmount } from 'svelte';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import { setApplications } from '@/core/storage/applications';
-import type { Application } from '../../core/storage/applications';
 import App from './App.svelte';
 
 const mockApplications: Application[] = [
