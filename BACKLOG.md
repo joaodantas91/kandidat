@@ -16,7 +16,7 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Files:** `src/lib/ProfileForm.svelte` (or `src/lib/profile.svelte`).
   - **Criteria:** Runs on mount. Clean fallback if storage is empty.
 
-- [ ] **TASK-03: Extend Autofill Core to Textarea and Select Elements**
+- [x] **TASK-03: Extend Autofill Core to Textarea and Select Elements**
   - **Goal:** Support multiline inputs and dropdowns (`HTMLTextAreaElement`, `HTMLSelectElement`) using appropriate prototype setters.
   - **Files:** `src/core/autofill/autofill.ts`, `src/core/autofill/autofill.test.ts`.
   - **Criteria:** Unit tests in vitest pass for textarea and select elements.

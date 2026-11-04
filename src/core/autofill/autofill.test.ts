@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { autofill, FIELD_RULES } from './autofill';
+import { autofill } from './autofill';
 import type { Profile } from '../storage/storage';
 
 describe('autofill()', () => {
@@ -72,12 +72,37 @@ describe('autofill()', () => {
     expect(selectedInput?.value).toBe(expected);
   });
 
+  it('fills field when element is a textarea', () => {
+    const textarea = document.createElement('textarea');
+    textarea.setAttribute('name', 'linkedin');
+    document.body.appendChild(textarea);
+
+    autofill({ profile, root: document });
+
+    expect(document.querySelector<HTMLTextAreaElement>('textarea[name="linkedin"]')?.value).toBe(
+      profile.linkedin,
+    );
+  });
+
   it('calls prototype native value setter when filling input', () => {
     const input = document.createElement('input');
     input.setAttribute('name', 'name');
     document.body.appendChild(input);
 
     const handlerSpy = vi.spyOn(HTMLInputElement.prototype, 'value', 'set');
+
+    autofill({ profile, root: document });
+
+    expect(handlerSpy).toHaveBeenCalled();
+    handlerSpy.mockRestore();
+  });
+
+  it('calls prototype native value setter when filling textarea', () => {
+    const textarea = document.createElement('textarea');
+    textarea.setAttribute('name', 'linkedin');
+    document.body.appendChild(textarea);
+
+    const handlerSpy = vi.spyOn(HTMLTextAreaElement.prototype, 'value', 'set');
 
     autofill({ profile, root: document });
 
