@@ -282,7 +282,7 @@ Important form behaviors:
     - Recognized compensation/experience questions (minimum/current annual salary, notice period, available start date, years of experience) may be filled only when labels are exact known matches.
   - **Criteria:** New fixture cases cover location, each link type, authorized yes/no, sponsorship now/future, and an unknown custom question that must stay untouched. Adapter tests prove native setters and `input`/`change` events are used, hidden fields and lat/long are never written, missing work-authorization answers are never guessed, and Workday performs no navigation/submission. Existing adapter tests still pass; `bunx vitest run` and `bun run check` pass; no new manifest permissions.
 
-- [ ] **TASK-UI-01: Modernize Candidate Profile Form UI to Match Options Design Language**
+- [x] **TASK-UI-01: Modernize Candidate Profile Form UI to Match Options Design Language**
   - **Goal:** Redesign `src/entrypoints/options/ProfileManager.svelte` to match the dark-theme aesthetic, visual hierarchy, and component styling of the Keyword Filters tab in `Options.svelte`.
   - **Files:** `src/entrypoints/options/ProfileManager.svelte`, `src/entrypoints/options/ProfileManager.test.ts`.
   - **UX/UI Specifications (Designer Persona):**
