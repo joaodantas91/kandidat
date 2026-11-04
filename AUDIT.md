@@ -2,19 +2,19 @@
 
 ## Active Issues
 
-- [ ] **[HIGH] Overwriting Existing User Input in Autofill Core**
-  - **Location:** `src/core/autofill/autofill.ts:60`
-  - **Vulnerability:** `findFormField` matches elements without checking if `element.value` already contains user-typed text. Blindly clobbers existing data when autofill triggers.
-  - **Remediation:** In `findFormField` or `autofill()`, skip elements where `element.value.trim().length > 0` unless explicitly forced.
-
-- [ ] **[MEDIUM] Manifest V3 Overbroad Host Permissions**
-  - **Location:** `wxt.config.ts`
-  - **Vulnerability:** `matches: ['<all_urls>']` in content script grants extension access to all browsing activity for user PII.
-  - **Remediation:** Restrict matches to known ATS job domains (`*.lever.co/*`, `*.greenhouse.io/*`, `*.myworkdayjobs.com/*`, `*.linkedin.com/*`).
+*None. All identified audit issues resolved.*
 
 ---
 
 ## Resolved Issues
+
+- [x] **[HIGH] Overwriting Existing User Input in Autofill Core**
+  - **Location:** `src/core/autofill/autofill.ts:60`
+  - **Resolution:** Added `input.value.trim().length === 0` guard. Verified with 5 unit tests in `autofill.test.ts`.
+
+- [x] **[MEDIUM] Manifest V3 Overbroad Host Permissions**
+  - **Location:** `wxt.config.ts`
+  - **Resolution:** Scoped `content_scripts.matches` hook to Lever, Greenhouse, Workday, and LinkedIn. Eliminated `<all_urls>`.
 
 - [x] **[CRITICAL] Unconsented PII Injection on Page Load**
   - **Location:** `src/entrypoints/content.ts`

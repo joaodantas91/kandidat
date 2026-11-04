@@ -55,7 +55,7 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Files:** `src/core/ats/types.ts`, `src/core/ats/platform.ts`, `src/core/ats/platform.test.ts`.
   - **Criteria:** Vitest covers `jobs.lever.co/<org>/<uuid>/apply`, `job-boards.greenhouse.io/<org>/jobs/<id>`, and `<tenant>.myworkdayjobs.com/...`; returns `null` for unrelated sites; no new manifest permissions.
 
-- [ ] **TASK-SEC-01: Sentinel Remediation — Guard Existing User Input & Scope Manifest Matches**
+- [x] **TASK-SEC-01: Sentinel Remediation — Guard Existing User Input & Scope Manifest Matches**
   - **Goal:** Resolve Sentinel audit findings: skip non-empty form inputs in `autofill.ts` so user-typed data is never overwritten; restrict content script `matches` in `wxt.config.ts` from `<all_urls>` to supported ATS job platforms.
   - **Files:** `src/core/autofill/autofill.ts`, `src/core/autofill/autofill.test.ts`, `wxt.config.ts`, `AUDIT.md`.
   - **Criteria:** Tests verify existing values are preserved; Sentinel marks issue resolved in `AUDIT.md`.
