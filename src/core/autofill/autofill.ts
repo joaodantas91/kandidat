@@ -99,6 +99,8 @@ export const autofill = ({ root = document, profile }: Autofill) => {
     if (!fieldValue) continue;
 
     const element = findFormField(root, selectors);
-    if (element) setFieldValue(element, fieldValue);
+    if (element && element.value.trim().length === 0) {
+      setFieldValue(element, fieldValue);
+    }
   }
 };
