@@ -24,4 +24,3 @@ Open-source browser extension to streamline and automate job applications on Lev
 
 ---
 
-git add README.md && git commit -m 'docs: rewrite README with AI study notice and usage guide'
