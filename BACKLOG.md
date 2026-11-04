@@ -276,3 +276,13 @@ Important form behaviors:
     - Work authorization: Application Questions radio/select fields whose labels match authorization/sponsorship patterns. Fill only explicit profile answers. Never click Next, Save, Submit, or navigation controls.
     - Recognized compensation/experience questions (minimum/current annual salary, notice period, available start date, years of experience) may be filled only when labels are exact known matches.
   - **Criteria:** New fixture cases cover location, each link type, authorized yes/no, sponsorship now/future, and an unknown custom question that must stay untouched. Adapter tests prove native setters and `input`/`change` events are used, hidden fields and lat/long are never written, missing work-authorization answers are never guessed, and Workday performs no navigation/submission. Existing adapter tests still pass; `bunx vitest run` and `bun run check` pass; no new manifest permissions.
+
+- [ ] **TASK-22: Profile-Powered Inline Quick Fill Action Bar**
+  - **Goal:** Inject a lightweight floating action bar on supported ATS pages when form fields are detected, providing a one-click "Fill Form" button and a dropdown preview of the candidate's active profile data.
+  - **Files:** `src/entrypoints/floating.content.ts`, `src/lib/components/QuickFillBar.svelte`, `src/core/autofill/fieldDetector.ts`.
+  - **Criteria:** Floating action bar renders cleanly without injecting host CSS pollution, displays detected field counts, triggers platform adapter autofill on click, and uses existing toast notifications for success states.
+
+- [ ] **TASK-23: Application Tracker Dashboard & Status Filter UI**
+  - **Goal:** Enhance the popup application tracker with search filtering, status badges (Applied, Interviewing, Rejected, Offered), and manual job entry support.
+  - **Files:** `src/lib/applications.svelte`, `src/core/storage/applications.ts`, `src/entrypoints/popup/App.svelte`, `src/entrypoints/popup/App.test.ts`.
+  - **Criteria:** Users can filter tracked applications by company name or ATS platform, update application status manually, and delete historical entries; unit tests verify storage and filtering logic with 100% pass rate.
