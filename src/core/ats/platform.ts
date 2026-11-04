@@ -2,7 +2,7 @@ import type { AtsAdapter } from './types';
 
 const LEVER_HOST = 'jobs.lever.co';
 const GREENHOUSE_HOSTS = ['job-boards.greenhouse.io', 'boards.greenhouse.io'];
-const WORKDAY_HOST_PATTERN = /(^|\.)(myworkdayjobs|myworkdaysite)\.com$/i;
+const WORKDAY_HOST_PATTERN = /(^|\.)(myworkdayjobs|myworkdaysite|workday)\.com$/i;
 
 const LEVER_DOM_SELECTORS = [
   '#application-form',

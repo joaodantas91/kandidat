@@ -1,17 +1,12 @@
 import { fillApplication } from '@/core/ats';
 import { getProfile } from '@/core/storage/storage';
+import { ATS_MATCHES } from '@/core/ats/matches';
+
+export { ATS_MATCHES };
 
 export const AUTO_FILL_MESSAGE = 'AUTO_FILL';
 
 export const FLOATING_HOST_ID = 'kandidat-floating-root';
-
-export const ATS_MATCHES = [
-  '*://*.lever.co/*',
-  '*://*.greenhouse.io/*',
-  '*://*.myworkdayjobs.com/*',
-  '*://*.myworkdaysite.com/*',
-  '*://*.workday.com/*',
-];
 
 const BUTTON_STYLES = `
   :host {

@@ -35,6 +35,10 @@ describe('detectAts()', () => {
       platform: 'workday',
       url: 'https://acme.myworkdaysite.com/recruiting/acme/job/Engineer_R-123',
     },
+    {
+      platform: 'workday',
+      url: 'https://example.workday.com/...',
+    },
   ])('detects $platform from $url', ({ platform, url }) => {
     expect(detectAts(url)?.platform).toBe(platform);
   });

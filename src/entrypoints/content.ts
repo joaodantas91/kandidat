@@ -1,6 +1,6 @@
 import { fillApplication } from '@/core/ats';
 import { getProfile } from '@/core/storage/storage';
-import { ATS_MATCHES } from './floating.content';
+import { ATS_MATCHES } from '@/core/ats/matches';
 
 export default defineContentScript({
   matches: ATS_MATCHES,
