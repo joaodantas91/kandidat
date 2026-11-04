@@ -35,3 +35,13 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Goal:** Create core module for querying LiteLLM local proxy (`http://localhost:4000/v1`) with job application prompt and candidate experience context.
   - **Files:** `src/core/ai/answerer.ts`, `src/core/ai/answerer.test.ts`.
   - **Criteria:** Unit tests with mocked fetch pass with exit code 0.
+
+- [ ] **TASK-07: Heuristic Field Detector for Candidate Profile Keys**
+  - **Goal:** Scan the active page for `<input>`, `<textarea>` and `<select>` elements matching candidate profile fields (`fullName`, `email`, `phone`, `linkedin`) in a single pass.
+  - **Files:** `src/core/autofill/fieldDetector.ts`, `src/core/autofill/fieldDetector.test.ts`.
+  - **Criteria:** Unit tests pass with synthetic DOM fixtures; returns typed element map.
+
+- [ ] **TASK-08: Floating "Fill Profile" Action Button for ATS Portals**
+  - **Goal:** Inject a clean, isolated floating button into supported ATS portals (Lever, Greenhouse, Workday) triggering autofill.
+  - **Files:** `src/entrypoints/floating.content.ts`.
+  - **Criteria:** Mutation-safe injection that does not conflict with host styles.
