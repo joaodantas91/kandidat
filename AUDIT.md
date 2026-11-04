@@ -202,3 +202,15 @@ _No blocking or security issues. LOW-severity hardening items are recorded below
   - `[INFO] WXT Open-in-Tab Meta Tag`: Verified `<meta name="manifest.open_in_tab" content="true" />` in `options/index.html`. Successfully compiles to `"options_ui": {"open_in_tab": true}` in MV3 `manifest.json`.
   - `[INFO]` No prototype pollution, no unsafe innerHTML injections, zero permission escalation.
 - Status: **Core invariants verified clean**.
+
+---
+
+## Audit: TASK-21 Toast Notification System (2026-11-04)
+
+- Audited commit range: `acba0aa..96e635d`
+- Findings:
+  - `[INFO]` Zero DOM injection risks. No `innerHTML`, `outerHTML`, or `{@html}` in `Toast.svelte`.
+  - `[INFO]` No prototype pollution or unsafe setter overrides.
+  - `[INFO]` No Manifest V3 permission escalation.
+  - `[INFO]` Clean module separation: reactive state isolated in `toastStore.ts`, thin UI in `Toast.svelte`.
+- Status: **Core invariants verified clean**.
