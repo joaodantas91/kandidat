@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <body>
+    <form data-automation-id="applyFlowPage">
+      <h2>My Information</h2>
+
+      <div data-automation-id="legalNameSection">
+        <label for="firstName">First Name</label>
+        <input
+          id="firstName"
+          data-automation-id="legalNameSection_firstName"
+          type="text"
+          autocomplete="given-name"
+        />
+
+        <label for="middleName">Middle Name</label>
+        <input
+          id="middleName"
+          data-automation-id="legalNameSection_middleName"
+          type="text"
+        />
+
+        <label for="lastName">Last Name</label>
+        <input
+          id="lastName"
+          data-automation-id="legalNameSection_lastName"
+          type="text"
+          autocomplete="family-name"
+        />
+      </div>
+
+      <label for="email">Email Address</label>
+      <input
+        id="email"
+        data-automation-id="email"
+        type="email"
+        autocomplete="email"
+      />
+
+      <label for="phone">Phone Number</label>
+      <input
+        id="phone"
+        data-automation-id="phone-number"
+        type="tel"
+        autocomplete="tel"
+      />
+
+      <div data-automation-id="addressSection">
+        <label for="address">Address</label>
+        <input
+          id="address"
+          data-automation-id="addressSection_addressLine1"
+          type="text"
+        />
+      </div>
+
+      <button data-automation-id="bottom-navigation-next-button" type="button">
+        Next
+      </button>
+      <button data-automation-id="bottom-navigation-save-button" type="button">
+        Save
+      </button>
+      <button
+        data-automation-id="bottom-navigation-submit-button"
+        type="submit"
+      >
+        Submit
+      </button>
+    </form>
+  </body>
+</html>
