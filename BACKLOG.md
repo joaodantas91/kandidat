@@ -234,7 +234,7 @@ Important form behaviors:
     - Add `updateProfile(patch)` for partial writes so the UI can avoid rebuilding the entire object. Preserve unknown top-level keys already in storage.
   - **Criteria:** Tests cover legacy four-field records, fully nested records, legacy alias precedence, trimming/empty removal, name derivation from first/last, rejection of empty identity, and watcher updates. Existing consumers (`autofill.ts`, ATS adapters, `ProfileForm.svelte`) still compile; `bunx vitest run` and `bun run check` pass.
 
-- [ ] **TASK-18: Comprehensive Profile Manager UI (Svelte 5)**
+- [x] **TASK-18: Comprehensive Profile Manager UI (Svelte 5)**
   - **Goal:** Replace the minimal profile form in the Options page with a complete candidate profile manager for every TASK-17 field. Use Svelte 5 runes (`$state`, `$derived`, `$effect` only where needed) and the existing dark Options-page styling.
   - **Files:** `src/entrypoints/options/ProfileManager.svelte` (new), `src/entrypoints/options/ProfileManager.test.ts` (new), `src/entrypoints/options/Options.svelte`, `src/entrypoints/options/Options.test.ts`. Keep `src/lib/ProfileForm.svelte` working for the popup unless the popup is migrated in the same task.
   - **UI sections (fieldsets with legends):**
