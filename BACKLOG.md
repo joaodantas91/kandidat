@@ -293,7 +293,7 @@ Important form behaviors:
     - **Strict Invariants:** Zero `as any`, zero `@ts-ignore`, pure Svelte 5 runes (`$state`, `$derived`, `$props`), zero new npm dependencies.
   - **Criteria:** Tests verify form renders in dark theme, inputs remain fully accessible with proper `id` and `label` associations, validation still works, and `bunx vitest run` passes with exit code 0.
 
-- [ ] **TASK-DS-01: Global Design System, Design Tokens & Unified Component CSS (Keywords Filter Baseline)**
+- [x] **TASK-DS-01: Global Design System, Design Tokens & Unified Component CSS (Keywords Filter Baseline)**
   - **Goal:** Eliminate jarring visual differences between "Keywords Filters" and "Profile Settings" by establishing the Keywords Filter design (`src/entrypoints/options/Options.svelte`) as the universal golden standard. Unify all inputs, buttons, cards, and spacing under global design tokens (`src/styles/tokens.css`) and reusable component CSS (`src/styles/components.css`).
   - **Context & Current Discrepancy:**
     - "Keywords Filters" (`Options.svelte`) has a crisp, compact, dark aesthetic: `#111` canvas, `#1c1c1c` tags/cards, `1px solid #333` borders, `6px 10px` input padding, `12px` font size, and white/subtle focus highlights (`#eaeaea`).
@@ -311,6 +311,18 @@ Important form behaviors:
     - Standard Tags & Cards: `.tag` (matching `.keyword-tag`: `background: #1c1c1c`, `border: 1px solid #333`, `padding: 4px 8px`, `font-size: 12px`), `.card` (matching `.options-container` & `.profile-wrapper`).
     - Standard Checkbox/Radio: `accent-color: var(--color-text-primary, #eaeaea)`.
   - **Criteria:** Design tokens and component styles imported into popup and options; all components in ProfileManager and Options refactored to consume tokens; inputs in Profile Settings look and behave identically to inputs in Keywords Filters; `bunx vitest run` passes with exit code 0 and zero `as any`.
+
+- [ ] **TASK-REFACTOR-02: Decompose Monolithic ProfileManager into Modular Svelte 5 Subcomponents**
+  - **Goal:** Break down the monolithic 1,113-line `ProfileManager.svelte` into cohesive, reusable section components under `src/entrypoints/options/profile/`, reducing coordinator complexity and improving maintainability.
+  - **Files:**
+    - `src/entrypoints/options/profile/IdentitySection.svelte` (Name, preferred name, pronouns, email, phone)
+    - `src/entrypoints/options/profile/LocationSection.svelte` (Address, city, state, postal code, country)
+    - `src/entrypoints/options/profile/LinksSection.svelte` (LinkedIn, GitHub, portfolio, personal website, Twitter)
+    - `src/entrypoints/options/profile/WorkAuthSection.svelte` (Work authorization, sponsorship, permit type, citizenship, relocation)
+    - `src/entrypoints/options/profile/CompensationSection.svelte` (Currency, desired salary)
+    - `src/entrypoints/options/profile/ExperienceSection.svelte` (Current company, title, years of experience, degree, university, field of study, graduation year, notice period, summary)
+    - `src/entrypoints/options/ProfileManager.svelte` (Slim coordinator component, <150 lines, managing active profile state and persistence)
+  - **Criteria:** All profile subcomponents use Svelte 5 runes (`$props()`, `$state()`); UI appearance remains 100% identical under `tokens.css`; `bunx vitest run` passes with 236/236 tests; zero `as any` or `@ts-ignore`.
 
 - [ ] **TASK-22: Profile-Powered Inline Quick Fill Action Bar**
   - **Goal:** Inject a lightweight floating action bar on supported ATS pages when form fields are detected, providing a one-click "Fill Form" button and a dropdown preview of the candidate's active profile data.
