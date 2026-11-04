@@ -85,6 +85,11 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Files:** `src/core/ats/index.ts`, `src/entrypoints/content.ts`, `src/entrypoints/content.test.ts`, `src/entrypoints/floating.content.ts`.
   - **Criteria:** Unit test proves the correct adapter is selected per platform, fallback runs otherwise, and adapter errors stay isolated; existing autofill tests still pass.
 
+- [ ] **TASK-SEC-02: Fix Content Script Match Isolation & Workday Detector Sync**
+  - **Goal:** Resolve Sentinel audit findings: extract `ATS_MATCHES` to `src/core/ats/matches.ts`; scope manifest matches per script so `linkedin.js` only runs on LinkedIn and `floating.js` only on ATS; add `workday.com` to `WORKDAY_HOST_PATTERN` in `src/core/ats/platform.ts`.
+  - **Files:** `src/core/ats/matches.ts`, `src/core/ats/platform.ts`, `src/core/ats/platform.test.ts`, `src/entrypoints/content.ts`, `src/entrypoints/floating.content.ts`, `wxt.config.ts`, `AUDIT.md`.
+  - **Criteria:** Tests verify script-specific match scoping, `*.workday.com` detection; built manifest verified; Sentinel signs off in `AUDIT.md`.
+
 - [ ] **TASK-14: Job Context Extractor (Company, Title, Description)**
   - **Goal:** Extract normalized company, role title, and job description text from supported ATS pages so AI answers are grounded in the actual posting.
   - **Files:** `src/core/ats/jobContext.ts`, `src/core/ats/jobContext.test.ts`, `tests/fixtures/{greenhouse,lever,workday}-job.html`.
