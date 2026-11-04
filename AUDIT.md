@@ -20,20 +20,20 @@ _No blocking or security issues. LOW-severity hardening items are recorded below
 
 ### Findings
 
-- [ ] **[LOW] Manifest hook drops Workday hosts recognized by the detector**
+- [x] **[LOW] Manifest hook drops Workday hosts recognized by the detector**
   - **Location:** `wxt.config.ts:3` vs `src/core/ats/platform.ts:5`, `src/entrypoints/floating.content.ts:8`
   - **Detail:** the build hook replaces every content script's `matches` with `ATS_MATCHES`, which omits `myworkdaysite.com` and `workday.com` even though `detectAts` accepts `myworkdaysite.com` and `floating.content.ts` declares both. Content scripts therefore do not load on those Workday tenants.
-  - **Fix:** add `*://*.myworkdaysite.com/*` (and `workday.com` if intended) to the hook, or share one matches constant.
+  - **Resolution:** TASK-13 added `myworkdaysite.com` and `workday.com` to the hook list. See the TASK-13 audit for the follow-on `workday.com` detector gap.
 
-- [ ] **[LOW] `content.ts` source still declares `<all_urls>`**
+- [x] **[LOW] `content.ts` source still declares `<all_urls>`**
   - **Location:** `src/entrypoints/content.ts:5`
   - **Detail:** broad host access is only removed by the `build:manifestGenerated` hook. The built manifest is scoped (verified), but the source declaration is misleading and a build/tooling change could silently reintroduce broad access.
-  - **Fix:** set `matches` to the same scoped ATS list so source matches the shipped manifest.
+  - **Resolution:** TASK-13 changed `content.ts` to `matches: ATS_MATCHES`; `<all_urls>` no longer appears in source or in the built manifest.
 
-- [ ] **[INFO] ATS detector/adapters are not yet wired into an entrypoint**
+- [x] **[INFO] ATS detector/adapters are not yet wired into an entrypoint**
   - **Location:** `src/core/ats/platform.ts`, `src/core/ats/{greenhouse,lever,workday}.ts`
   - **Detail:** no entrypoint imports `detectAts` or the `fill*` functions, and the platform adapters omit the optional `fill` member. TASK-10..12 code is inert today, so there is no runtime exposure, but detection and filling are not actually connected.
-  - **Fix:** follow-up integration task; wrap calls in the existing `try/catch` boundaries.
+  - **Resolution:** TASK-13 added the `fillApplication` dispatcher and routed both `content.ts` and `floating.content.ts` through it.
 
 ### Verification
 
@@ -74,7 +74,77 @@ _No blocking or security issues. LOW-severity hardening items are recorded below
 
 ---
 
+## Audit — AUTO_FILL Routing & ATS Dispatch (TASK-13, diff `c1ed12f..HEAD`)
+
+**Result:** Routing and fallback work as specified; no injection regression. Two MEDIUM host-scoping defects and two LOW hardening items found.
+
+### Confirmed clean
+
+- **AUTO_FILL routing — correct.** Popup sends `AUTO_FILL` (`src/lib/home.svelte:9`) → `content.ts:8-19` listener → `getProfile()` → `fillApplication(profile, new URL(location.href))`. No autofill runs on page load; the message gate is intact, so unconsented PII injection remains fixed.
+- **Adapter dispatch — correct.** `src/core/ats/index.ts:9-27` maps `AtsPlatform` to `fillLever`/`fillGreenhouse`/`fillWorkday`; `detectAts` selects exactly one adapter by host or DOM heuristic, and the filler is invoked with the same `root`.
+- **Heuristic fallback — correct per spec.** When `detectAts` returns `null`, `fillApplication` calls core `autofill({ profile, root })`. Matches BACKLOG TASK-13 ("fall back ... on unsupported pages") and is covered by `index.test.ts`.
+- **Error boundary isolation — correct for adapters.** `detectAts` and the adapter call share one `try/catch` (`index.ts:23-31`); a thrown adapter is logged and the fallback still runs. `content.ts` and `floating.content.ts` additionally wrap the whole call, so storage and fallback failures are swallowed. Verified by tests.
+- **DOM injection — clean.** No `innerHTML`, `outerHTML`, `insertAdjacentHTML`, `eval`, or `new Function` in production code; dispatch uses the shared native-setter helper.
+- **Permissions — unchanged.** Built manifest still emits `permissions: ["storage"]` and contains no `<all_urls>`.
+
+### Findings
+
+- [ ] **[MEDIUM] `workday.com` is matched for injection but not by the detector**
+  - **Location:** `wxt.config.ts:8` (`*://*.workday.com/*`) vs `src/core/ats/platform.ts:5`
+  - **Detail:** TASK-13 added `workday.com` to the match list, but `WORKDAY_HOST_PATTERN = /(^|\.)(myworkdayjobs|myworkdaysite)\.com$/i` does not include `workday`. On a `*.workday.com` tenant the content script loads, `detectAts` returns `null` (unless DOM selectors happen to match), and the generic `autofill` fallback runs — which does not understand Workday's `data-automation-id` fields, so nothing meaningful is filled.
+  - **Fix:** add `workday` to the detector pattern (and a `platform.test.ts` case for `*.workday.com`), or drop `workday.com` from the match list.
+
+- [ ] **[MEDIUM] Manifest hook applies the union match list to every content script**
+  - **Location:** `wxt.config.ts:26-30`
+  - **Detail:** `build:manifestGenerated` overwrites every `content_scripts[].matches` with `ATS_MATCHES`. Result (verified in `.output/chrome-mv3/manifest.json`): `linkedin.js` is injected on Lever, Greenhouse, and Workday, while `content.js` and `floating.js` are injected on LinkedIn. This breaks least privilege and runs the LinkedIn feed-filter DOM mutation on unrelated sites (and the floating button on LinkedIn).
+  - **Fix:** stop rewriting all scripts; scope each content script at its source (`content.ts`/`floating.content.ts`/`linkedin.content.ts`) or map matches per script name in the hook.
+
+- [ ] **[MEDIUM] `ATS_MATCHES` duplicated between config and source, already drifted**
+  - **Location:** `wxt.config.ts:3-10` vs `src/entrypoints/floating.content.ts:8-14`
+  - **Detail:** two hand-maintained copies of the same list. They already disagree: the config copy includes `linkedin.com`, the floating copy does not. `content.ts:3` imports the floating copy, so source-declared matches (5 hosts) differ from the shipped manifest (6 hosts). `content.test.ts:27-30` compares source against the duplicate, not the build output, so it cannot catch the drift. This violates the PONYTAIL zero-copy rule.
+  - **Fix:** move the list to one module (e.g. `src/core/ats/matches.ts`) and import it from the config, both content entrypoints, and tests.
+
+- [ ] **[LOW] `content.ts` imports a sibling entrypoint for a constant**
+  - **Location:** `src/entrypoints/content.ts:3`
+  - **Detail:** `import { ATS_MATCHES } from './floating.content'` couples one entrypoint to another and imports its module side effects (`defineContentScript`, shadow-DOM code). Currently tree-shaken — built `content.js` contains no floating-button code — but fragile if the module gains non-tree-shakeable side effects.
+  - **Fix:** the shared matches module above also removes this coupling.
+
+- [ ] **[LOW] Fallback `autofill` sits outside the error boundary**
+  - **Location:** `src/core/ats/index.ts:33`
+  - **Detail:** adapter detection/fill are wrapped, but the fallback call is outside `try/catch`. A throwing fallback escapes `fillApplication` and relies on the caller (`content.ts`, `floating.content.ts`) to catch it. Both currently do, so this is not an active bug, but the function's isolation is asymmetric and `index.test.ts` only covers adapter throws.
+  - **Fix:** wrap the fallback in the same boundary (or document that callers must wrap).
+
+- [ ] **[INFO] No fallback when a detected adapter fills nothing**
+  - **Location:** `src/core/ats/index.ts:25-28`
+  - **Detail:** once an adapter is selected, `fillApplication` returns without checking whether any field was written. A supported host with changed selectors gets no heuristic fallback. This matches TASK-13's wording (fallback only for unsupported pages), so it is a known limitation rather than a defect.
+  - **Fix:** if desired, have fillers return a filled-count and fall back on zero.
+
+- [ ] **[INFO] Entrypoint test-filter regex covers `.test.` only**
+  - **Location:** `wxt.config.ts:20-25`
+  - **Detail:** `entrypoints:found` strips `/\.test\.[jt]sx?$/` so colocated tests are not treated as content scripts. A future `.spec.ts` file would slip through and be emitted as an entrypoint.
+  - **Fix:** broaden to `\.(test|spec)\.`.
+
+### Verification
+
+- `bunx vitest run` — 12 files, 128 tests passed.
+- `bun run check` — 0 errors, 0 warnings.
+- `bun run build` — succeeded; manifest scoped (no `<all_urls>`), but see the union-match finding above.
+
+---
+
 ## Resolved Issues
+
+- [x] **[LOW] Manifest hook dropped Workday hosts recognized by the detector**
+  - **Location:** `wxt.config.ts:3`
+  - **Resolution:** TASK-13 added `myworkdaysite.com` and `workday.com` to the hook list; the remaining `workday.com` detector mismatch is tracked in the TASK-13 audit.
+
+- [x] **[LOW] `content.ts` source declared `<all_urls>`**
+  - **Location:** `src/entrypoints/content.ts`
+  - **Resolution:** TASK-13 scoped `matches` to `ATS_MATCHES`; broad host access is gone from source and the built manifest.
+
+- [x] **[INFO] ATS detector/adapters were not wired into an entrypoint**
+  - **Location:** `src/core/ats/index.ts`
+  - **Resolution:** TASK-13 added `fillApplication` and routed `content.ts` + `floating.content.ts` through it.
 
 - [x] **[INFO] Native-setter helper duplicated across four modules**
   - **Location:** `src/core/dom/setter.ts`
