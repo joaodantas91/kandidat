@@ -214,3 +214,15 @@ _No blocking or security issues. LOW-severity hardening items are recorded below
   - `[INFO]` No Manifest V3 permission escalation.
   - `[INFO]` Clean module separation: reactive state isolated in `toastStore.ts`, thin UI in `Toast.svelte`.
 - Status: **Core invariants verified clean**.
+
+---
+
+## Audit: TASK-16 Open-Ended Question Draft Assistant (2026-11-04)
+
+- Audited commit range: `5755e76..0a9884e`
+- Findings:
+  - `[INFO]` Zero DOM injection risks. Draft values set safely via native prototype setter (`setter.ts`).
+  - `[INFO]` No automatic submission or unconsented form filling.
+  - `[INFO]` Zero code duplication: reuses `setElementValue` and `answerQuestion`.
+  - `[INFO]` No Manifest V3 permission escalation.
+- Status: **Core invariants verified clean**.
