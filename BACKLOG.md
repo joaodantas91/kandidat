@@ -100,6 +100,16 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Files:** `src/core/ats/confirmation.ts`, `src/core/ats/confirmation.test.ts`, `src/core/storage/applications.ts`, `src/core/storage/applications.test.ts`, `src/lib/applications.svelte`, `src/entrypoints/popup/App.svelte`.
   - **Criteria:** Confirmation fixtures for Lever (`/thanks`, `[data-qa="msg-submit-success"]`), Greenhouse (`#application_confirmation` or "Thank you for applying"), and Workday (`[data-automation-id="applyFlowCongratsPage"]`); entries deduped by URL; popup renders the stored list; tests pass.
 
+- [ ] **TASK-20: Lightweight Popup Dashboard & Standalone Options Tab**
+  - **Goal:** Modernize popup into an Application Tracker & Quick Status monitor; replace redundant fill button with status indicator; add header "Settings" button triggering `chrome.runtime.openOptionsPage()`; configure `manifest.options_ui.open_in_tab = true` in `wxt.config.ts` so Options opens in a full tab instead of `chrome://extensions/?id=...`. Fix Svelte 5 event/component warnings.
+  - **Files:** `wxt.config.ts`, `src/entrypoints/popup/App.svelte`, `src/entrypoints/popup/App.test.ts`, `src/lib/components/tabs.svelte`.
+  - **Criteria:** `wxt build` outputs manifest with `options_ui.open_in_tab: true`; clicking Settings opens standalone options page; popup defaults to application list with status indicator; Svelte 5 warnings resolved (`onclick` instead of `on:click`); unit tests pass (`bunx vitest run && bun run check`).
+
+- [ ] **TASK-21: Success/Error Toast Notification System**
+  - **Goal:** Implement a lightweight toast notification component and service across the popup, floating action button, and options page to confirm autofill, copy, and save operations.
+  - **Files:** `src/lib/Toast.svelte`, `src/lib/toastStore.ts`, `src/entrypoints/popup/App.svelte`, `src/entrypoints/floating.content.ts`, `src/entrypoints/options/Options.svelte`.
+  - **Criteria:** Toast notifications appear on successful profile save, copy, or autofill trigger and auto-dismiss; unit tests verify toast store and display; all vitest tests pass.
+
 - [ ] **TASK-16: Open-Ended Question Draft Assistant**
   - **Goal:** Detect a focused open-ended question textarea (Greenhouse/Lever), draft an answer from extracted job context plus saved experience via `answerQuestion`, and show it for user approval without auto-submitting.
   - **Files:** `src/core/ats/questions.ts`, `src/core/ats/questions.test.ts`, `src/entrypoints/questionAssist.content.ts`, `tests/fixtures/{greenhouse,lever}-questions.html`.
