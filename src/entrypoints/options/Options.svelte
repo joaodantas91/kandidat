@@ -10,8 +10,8 @@
     type Settings,
   } from '@/core/storage/settings';
   import { showToast, dismissToast, toasts } from '@/lib/toastStore';
-  import ProfileForm from '@/lib/ProfileForm.svelte';
-  import Toast from '@/lib/Toast.svelte';
+import ProfileManager from '@/entrypoints/options/ProfileManager.svelte';
+import Toast from '@/lib/Toast.svelte';
 
   let activeTab: 'keywords' | 'profile' = $state('keywords');
   let keywords: string[] = $state([]);
@@ -184,9 +184,7 @@
         <p class="description">
           Saved profile details used for autofilling job application forms.
         </p>
-        <div class="profile-wrapper">
-          <ProfileForm />
-        </div>
+        <ProfileManager />
       </section>
     {/if}
   </main>
