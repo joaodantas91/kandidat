@@ -293,6 +293,20 @@ Important form behaviors:
     - **Strict Invariants:** Zero `as any`, zero `@ts-ignore`, pure Svelte 5 runes (`$state`, `$derived`, `$props`), zero new npm dependencies.
   - **Criteria:** Tests verify form renders in dark theme, inputs remain fully accessible with proper `id` and `label` associations, validation still works, and `bunx vitest run` passes with exit code 0.
 
+- [ ] **TASK-DS-01: Global Design System, Design Tokens & Unified Component CSS**
+  - **Goal:** Unify all extension styling under a cohesive design token system (`src/styles/tokens.css` and `src/styles/components.css`) eliminating scattered hex codes, inconsistent paddings, and repetitive component CSS.
+  - **Files:** `src/styles/tokens.css` (new), `src/styles/components.css` (new), `src/entrypoints/popup/app.css`, `src/entrypoints/options/Options.svelte`, `src/entrypoints/options/ProfileManager.svelte`, `src/lib/applications.svelte`.
+  - **Design Tokens (`tokens.css`):**
+    - Color tokens: `--color-bg-canvas` (#0a0a0a), `--color-bg-surface` (#121212), `--color-bg-elevated` (#1a1a1a), `--color-bg-input` (#161616), `--color-border-subtle` (#262626), `--color-border-default` (#333333), `--color-border-focus` (#ffffff), `--color-text-primary` (#f5f5f5), `--color-text-secondary` (#a3a3a3), `--color-text-muted` (#737373), `--color-primary` (#2563eb), `--color-primary-hover` (#1d4ed8), `--color-success` (#10b981), `--color-danger` (#ef4444).
+    - Spacing scale: `--space-1` (4px), `--space-2` (8px), `--space-3` (12px), `--space-4` (16px), `--space-5` (20px), `--space-6` (24px), `--space-8` (32px).
+    - Typography scale: `--font-xs` (11px), `--font-sm` (12px), `--font-base` (14px), `--font-lg` (16px), `--font-xl` (18px), `--font-2xl` (20px).
+    - Radii: `--radius-sm` (4px), `--radius-md` (6px), `--radius-lg` (8px), `--radius-full` (9999px).
+  - **Unified Component Classes (`components.css`):**
+    - Standard form controls (`.form-input`, `.form-textarea`, `.form-select`, plus element defaults) ensuring inputs across Popup and Options have identical height, padding, font-size, background, and focus glow.
+    - Standard button variants: `.btn`, `.btn-primary`, `.btn-secondary`, `.btn-danger`, `.btn-sm`.
+    - Standard card containers: `.card`, `.card-header`, `.form-group`, `.form-label`, `.grid-2col`, `.badge`.
+  - **Criteria:** Design tokens and component styles imported into popup and options; all components refactored to consume tokens instead of raw hex values; visual appearance remains dark, crisp, and 100% consistent across Popup and Options; `bunx vitest run` and `bun run check` pass with exit code 0.
+
 - [ ] **TASK-22: Profile-Powered Inline Quick Fill Action Bar**
   - **Goal:** Inject a lightweight floating action bar on supported ATS pages when form fields are detected, providing a one-click "Fill Form" button and a dropdown preview of the candidate's active profile data.
   - **Files:** `src/entrypoints/floating.content.ts`, `src/lib/components/QuickFillBar.svelte`, `src/core/autofill/fieldDetector.ts`.
