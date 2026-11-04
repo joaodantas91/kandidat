@@ -2,7 +2,6 @@
   import Home from '../home.svelte';
   import ProfileForm from '../ProfileForm.svelte';
   import Applications from '../applications.svelte';
-  import { onMount } from 'svelte';
 
   let tabs = $state([
     { label: 'Home', value: 1, component: Home },
@@ -20,7 +19,7 @@
   <ul>
     {#each tabs as tab}
       <li>
-        <a role="tab" href="#tab" on:click={handleClick(tab.value)}>
+        <a role="tab" href="#tab" onclick="{handleClick(tab.value)}">
           {tab.label}
         </a>
       </li>
@@ -31,7 +30,13 @@
 {#each tabs as tab}
   {#if activeTabValue == tab.value}
     <div class="box">
-      <svelte:component this={tab.component} />
+      {#if tab.label === 'Home'}
+        <Home />
+      {:else if tab.label === 'Info'}
+        <ProfileForm />
+      {:else if tab.label === 'Applications'}
+        <Applications />
+      {/if}
     </div>
   {/if}
 {/each}
