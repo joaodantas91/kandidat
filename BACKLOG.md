@@ -70,7 +70,7 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Files:** `src/core/ats/lever.ts`, `src/core/ats/lever.test.ts`, `tests/fixtures/lever-form.html`.
   - **Criteria:** Fixture tests fill the five named fields; custom `.application-question` fields are left untouched; native setter path verified; full suite passes.
 
-- [ ] **TASK-12: Workday "My Information" Step Adapter**
+- [x] **TASK-12: Workday "My Information" Step Adapter**
   - **Goal:** Fill only the visible Workday My Information step (legal name, email, phone) using `data-automation-id` selectors; never click Next, Save, or Submit.
   - **Files:** `src/core/ats/workday.ts`, `src/core/ats/workday.test.ts`, `tests/fixtures/workday-my-information.html`.
   - **Criteria:** Fixture tests map `legalNameSection_firstName`, `legalNameSection_lastName`, `email`, and `phone-number`; adapter no-ops when the step is absent; no navigation or submit calls.
