@@ -5,6 +5,7 @@ export type Profile = {
   name: string;
   email?: string;
   phone?: string;
+  org?: string;
   linkedin?: string;
 };
 

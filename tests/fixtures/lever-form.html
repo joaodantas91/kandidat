@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <body>
+    <form id="application-form">
+      <label for="name">Full name</label>
+      <input id="name" name="name" type="text" autocomplete="name" />
+
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email" autocomplete="email" />
+
+      <label for="phone">Phone</label>
+      <input id="phone" name="phone" type="tel" autocomplete="tel" />
+
+      <label for="org">Current company</label>
+      <input id="org" name="org" type="text" />
+
+      <label for="urls[LinkedIn]">LinkedIn</label>
+      <input
+        id="urls[LinkedIn]"
+        name="urls[LinkedIn]"
+        type="url"
+        autocomplete="url"
+      />
+
+      <div class="application-question">
+        <label for="question_1">LinkedIn profile</label>
+        <input id="question_1" name="question_1" type="text" />
+      </div>
+
+      <div class="application-question">
+        <label for="question_2">How did you hear about us?</label>
+        <input id="question_2" name="question_2" type="text" />
+      </div>
+    </form>
+  </body>
+</html>
