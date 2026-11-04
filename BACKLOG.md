@@ -110,7 +110,7 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Files:** `src/lib/Toast.svelte`, `src/lib/toastStore.ts`, `src/entrypoints/popup/App.svelte`, `src/entrypoints/floating.content.ts`, `src/entrypoints/options/Options.svelte`.
   - **Criteria:** Toast notifications appear on successful profile save, copy, or autofill trigger and auto-dismiss; unit tests verify toast store and display; all vitest tests pass.
 
-- [ ] **TASK-16: Open-Ended Question Draft Assistant**
+- [x] **TASK-16: Open-Ended Question Draft Assistant**
   - **Goal:** Detect a focused open-ended question textarea (Greenhouse/Lever), draft an answer from extracted job context plus saved experience via `answerQuestion`, and show it for user approval without auto-submitting.
   - **Files:** `src/core/ats/questions.ts`, `src/core/ats/questions.test.ts`, `src/entrypoints/questionAssist.content.ts`, `tests/fixtures/{greenhouse,lever}-questions.html`.
   - **Criteria:** Fixture tests extract question label + textarea; `answerQuestion` is mocked in tests; draft is only inserted after explicit user action; no form submission or auto-fill of unknown fields.
