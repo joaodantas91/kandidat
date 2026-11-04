@@ -94,3 +94,165 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Goal:** Detect a focused open-ended question textarea (Greenhouse/Lever), draft an answer from extracted job context plus saved experience via `answerQuestion`, and show it for user approval without auto-submitting.
   - **Files:** `src/core/ats/questions.ts`, `src/core/ats/questions.test.ts`, `src/entrypoints/questionAssist.content.ts`, `tests/fixtures/{greenhouse,lever}-questions.html`.
   - **Criteria:** Fixture tests extract question label + textarea; `answerQuestion` is mocked in tests; draft is only inserted after explicit user action; no form submission or auto-fill of unknown fields.
+
+## Candidate Profile Schema & ATS Form Research (2026-11-04)
+
+Findings from Lever, Greenhouse, and Workday application forms. The shared field
+groups below become the canonical profile model for TASK-17 through TASK-19.
+
+| Group | Common fields | Lever | Greenhouse | Workday |
+| --- | --- | --- | --- | --- |
+| Identity | Full/legal name, first, middle, last, preferred name, pronouns | Single `name` field; optional pronouns | `first_name`, `last_name`; preferred name is often custom | `legalNameSection_firstName`, `legalNameSection_middleName`, `legalNameSection_lastName`, suffix, preferred name |
+| Contact | Email, alternate email, phone, alternate phone | `email`, `phone` | `email`, `phone` | `email`, `phone-number`, phone device type |
+| Location | Address line 1/2, city, state/province, postal code, country | `location` + hidden `selectedLocation` | `job_application[location]` or `location`, Google Places autocomplete | `addressSection_addressLine1`, `addressSection_addressLine2`, `addressSection_city`, `addressSection_postalCode`, country/region select widgets |
+| Links | LinkedIn, GitHub, portfolio, website, Twitter/X, Stack Overflow, Dribbble, other | `urls[LinkedIn]`, `urls[GitHub]`, `urls[Portfolio]`, `urls[Other]`, configurable labels | Link questions, commonly `question_<id>` with LinkedIn/website/GitHub labels | Websites and social URLs in My Experience |
+| Work authorization | Authorized to work, sponsorship now/future, permit type, citizenship, relocation, travel | Custom question cards, often grouped under Work Eligibility | Custom `question_<id>` questions | Application Questions; Workday also ships mapped eligibility fields such as `Legal_Eligibility` and `Require_sponsorship` |
+| Compensation | Desired/minimum/current salary, currency, period | Custom questions | Custom questions | Application Questions; mapped `Required_Annual_Salary` and `Current_Annual_Salary` |
+| Experience | Current company, current title, years, notice period, start date, education | `org`; custom questions | Custom questions; education/employment blocks | My Experience and Application Questions |
+
+Important form behaviors:
+
+- Lever uses one full-name input, so first/last must be derived only when the ATS
+  requires them. Lever link fields use the `urls[<Label>]` convention and labels
+  are employer-configurable.
+- Greenhouse uses separate first/last fields. Location may be a Google Places
+  autocomplete; typing text alone can leave it uncommitted. Never set hidden
+  latitude/longitude values. Work authorization and sponsorship are custom
+  `question_<id>` fields whose labels vary by employer.
+- Workday is a multi-step React wizard. Address country/state are custom select
+  widgets rather than plain inputs, and automation IDs vary by tenant/version.
+  Adapters must use verified fixtures plus label fallback, fill only the visible
+  step, and never click Next, Save, or Submit.
+- Work authorization questions are legal/screening answers. A value is filled
+  only when the profile explicitly stores it; missing or ambiguous values are
+  left untouched. Never infer sponsorship or authorization.
+- Compensation/experience questions are often custom and should be filled only
+  when the label/name is an exact known match; unknown custom questions remain
+  untouched.
+
+- [ ] **TASK-17: Expanded Profile Schema & Storage**
+  - **Goal:** Replace the four-field flat profile with a versioned, backwards-compatible candidate profile covering identity, contact, location, links, work authorization, compensation, and experience. Keep existing `name`/`email`/`phone`/`org`/`linkedin` callers working.
+  - **Files:** `src/core/storage/storage.ts`, `src/core/storage/storage.test.ts`.
+  - **Schema:**
+    ```ts
+    export type ProfileLocation = {
+      addressLine1?: string;
+      addressLine2?: string;
+      city?: string;
+      state?: string;
+      postalCode?: string;
+      country?: string; // display name, e.g. "United States"
+      countryCode?: string; // ISO 3166-1 alpha-2, e.g. "US"
+    };
+
+    export type ProfileLinks = {
+      linkedin?: string;
+      github?: string;
+      portfolio?: string;
+      website?: string;
+      twitter?: string;
+      stackoverflow?: string;
+      dribbble?: string;
+      other?: string;
+    };
+
+    export type WorkAuthorization = {
+      authorizedToWork?: boolean;
+      sponsorshipRequired?: 'none' | 'now' | 'future' | 'now_or_future';
+      workPermitType?: string;
+      citizenship?: string;
+      willingToRelocate?: boolean;
+      willingToTravel?: boolean;
+    };
+
+    export type Compensation = {
+      currency?: string; // ISO 4217, default "USD"
+      desiredSalary?: number;
+      minimumSalary?: number;
+      currentSalary?: number;
+      salaryPeriod?: 'annual' | 'monthly' | 'hourly';
+    };
+
+    export type Experience = {
+      currentCompany?: string;
+      currentTitle?: string;
+      yearsOfExperience?: number;
+      highestDegree?: string;
+      university?: string;
+      fieldOfStudy?: string;
+      graduationYear?: number;
+      noticePeriod?: string;
+      availableStartDate?: string; // ISO date, YYYY-MM-DD
+      summary?: string;
+    };
+
+    export type Profile = {
+      name: string; // canonical full/display name
+      firstName?: string;
+      middleName?: string;
+      lastName?: string;
+      preferredName?: string;
+      pronouns?: string;
+      email?: string;
+      alternateEmail?: string;
+      phone?: string;
+      alternatePhone?: string;
+      location?: ProfileLocation;
+      links?: ProfileLinks;
+      workAuthorization?: WorkAuthorization;
+      compensation?: Compensation;
+      experience?: Experience;
+      org?: string; // legacy alias for experience.currentCompany
+      linkedin?: string; // legacy alias for links.linkedin
+    };
+    ```
+  - **Behavior:**
+    - Add `PROFILE_SCHEMA_VERSION = 2` and persist a `schemaVersion` marker without breaking reads of old records.
+    - Add `splitName(name)` and `deriveFullName(profile)` utilities. Explicit `firstName`/`lastName` win; otherwise split `name`; `preferredName` is used for display only.
+    - Add `normalizeProfile(value)` that trims strings, drops empty values, maps legacy `org` -> `experience.currentCompany` and `linkedin` -> `links.linkedin`, and keeps the legacy aliases in sync on write.
+    - `getProfile()` returns a normalized `Profile | null`; `setProfile()` normalizes before writing and throws a typed `ProfileValidationError` when no non-empty `name` can be derived.
+    - Add `updateProfile(patch)` for partial writes so the UI can avoid rebuilding the entire object. Preserve unknown top-level keys already in storage.
+  - **Criteria:** Tests cover legacy four-field records, fully nested records, legacy alias precedence, trimming/empty removal, name derivation from first/last, rejection of empty identity, and watcher updates. Existing consumers (`autofill.ts`, ATS adapters, `ProfileForm.svelte`) still compile; `bunx vitest run` and `bun run check` pass.
+
+- [ ] **TASK-18: Comprehensive Profile Manager UI (Svelte 5)**
+  - **Goal:** Replace the minimal profile form in the Options page with a complete candidate profile manager for every TASK-17 field. Use Svelte 5 runes (`$state`, `$derived`, `$effect` only where needed) and the existing dark Options-page styling.
+  - **Files:** `src/entrypoints/options/ProfileManager.svelte` (new), `src/entrypoints/options/ProfileManager.test.ts` (new), `src/entrypoints/options/Options.svelte`, `src/entrypoints/options/Options.test.ts`. Keep `src/lib/ProfileForm.svelte` working for the popup unless the popup is migrated in the same task.
+  - **UI sections (fieldsets with legends):**
+    - **Identity:** full name, first name, middle name, last name, preferred name, pronouns. Auto-suggest first/last from full name without overwriting explicit edits.
+    - **Contact:** email, alternate email, phone, alternate phone.
+    - **Location:** address line 1, address line 2, city, state/province, postal code, country, ISO country code.
+    - **Links:** LinkedIn, GitHub, portfolio, personal website, Twitter/X, Stack Overflow, Dribbble, other.
+    - **Work Authorization:** authorized-to-work yes/no/unspecified, sponsorship required none/now/future/now-or-future, permit type, citizenship, willing to relocate, willing to travel. Use explicit three-state controls so unanswered is distinct from "No".
+    - **Compensation:** currency, desired salary, minimum salary, current salary, salary period.
+    - **Experience:** current company, current title, years of experience, notice period, available start date, highest degree, university, field of study, graduation year, professional summary.
+  - **Behavior:**
+    - Load once on mount via `getProfile()`; edit a local draft, not storage on every keystroke.
+    - Save through `setProfile()` on explicit submit; preserve unknown keys and legacy aliases via the TASK-17 normalizer.
+    - Show a dirty indicator, Save disabled while unchanged, and a reset/reload action with confirmation when dirty.
+    - Validate required identity, email/URL formats, postal/country code shape, and non-negative numeric compensation/experience values. Surface field-level errors and a summary status.
+    - Keep all labels programmatically associated; group related fields; keyboard-accessible; no new dependencies.
+  - **Criteria:** Tests mount the manager with `fakeBrowser`, verify all sections/fields render, legacy profiles populate correctly, nested values round-trip through save, invalid email/URL/salary input is rejected, empty work-authorization remains unset, and unknown profile keys survive a save. Options tab test still passes; `wxt build`, `bunx vitest run`, and `bun run check` pass.
+
+- [ ] **TASK-19: ATS Adapter Field Mapping for Location, Links, and Work Authorization**
+  - **Goal:** Extend the Lever, Greenhouse, and Workday adapters beyond identity fields to fill structured location, portfolio/GitHub/website links, and explicit work-authorization/sponsorship answers. Keep unknown custom questions untouched and never guess legal answers.
+  - **Files:** `src/core/ats/types.ts`, `src/core/ats/fieldMapping.ts` (new), `src/core/ats/fieldMapping.test.ts` (new), `src/core/ats/lever.ts`, `src/core/ats/lever.test.ts`, `src/core/ats/greenhouse.ts`, `src/core/ats/greenhouse.test.ts`, `src/core/ats/workday.ts`, `src/core/ats/workday.test.ts`, `tests/fixtures/{lever,greenhouse,workday}-form.html`.
+  - **Shared mapper (`fieldMapping.ts`):**
+    - `resolveIdentity(profile)` -> full/first/middle/last/preferred values, honoring explicit split and falling back to `splitName(profile.name)`.
+    - `resolveLocation(profile, 'short' | 'full')` -> short `City, State, Country`; full address lines; never include undefined segments.
+    - `resolveLinks(profile)` -> ordered link map including legacy `linkedin`; dedupe values.
+    - `resolveWorkAuthorization(profile, questionText)` -> `'yes' | 'no' | undefined` from explicit booleans/enums. Return `undefined` when the profile has no answer or the question is ambiguous.
+    - Export one native-setter helper for text/select/radio and one visible-label matcher. Refactor existing duplicate setters to use it.
+  - **Lever mapping:**
+    - Location: `#location`, `input[name="location"]`, `input[autocomplete*="address" i]`. Fill visible text only; do not write hidden `selectedLocation`.
+    - Links: `input[name="urls[LinkedIn]"]`, `urls[GitHub]`, `urls[Portfolio]`, `urls[Website]`, `urls[Twitter]`, `urls[Other]`, plus case-insensitive `id`/`name` matching for configurable labels.
+    - Work authorization: only recognized custom cards (`cards[...]`) whose label matches authorization/sponsorship patterns. Fill text/select/radio when an explicit answer exists; skip all other custom cards.
+  - **Greenhouse mapping:**
+    - Location: `input[name="job_application[location]"]`, `#location`, `input[name="location"]`, `input[autocomplete*="address" i]`. Dispatch `input`/`change`; do not set hidden latitude/longitude or force a Google Places suggestion.
+    - Links: recognized link questions by `question_<id>` label/name for LinkedIn, GitHub, portfolio, website/personal site. Do not fill unrelated `question_*` fields.
+    - Work authorization: recognized `question_<id>` labels for legally authorized/right to work and now/future sponsorship. Map only explicit yes/no; skip decline/unknown options.
+  - **Workday mapping:**
+    - My Information address: `addressSection_addressLine1`, `addressSection_addressLine2`, `addressSection_city`, `addressSection_postalCode`; country/region via `addressSection_countryRegion`/verified select-widget selectors with visible option matching. Add fallbacks by label only when automation IDs differ.
+    - Links: websites/social URLs in My Experience; use verified `data-automation-id` selectors plus label fallback for LinkedIn, GitHub, portfolio, website. Skip ambiguous "Social Network URLs" entries.
+    - Work authorization: Application Questions radio/select fields whose labels match authorization/sponsorship patterns. Fill only explicit profile answers. Never click Next, Save, Submit, or navigation controls.
+    - Recognized compensation/experience questions (minimum/current annual salary, notice period, available start date, years of experience) may be filled only when labels are exact known matches.
+  - **Criteria:** New fixture cases cover location, each link type, authorized yes/no, sponsorship now/future, and an unknown custom question that must stay untouched. Adapter tests prove native setters and `input`/`change` events are used, hidden fields and lat/long are never written, missing work-authorization answers are never guessed, and Workday performs no navigation/submission. Existing adapter tests still pass; `bunx vitest run` and `bun run check` pass; no new manifest permissions.
