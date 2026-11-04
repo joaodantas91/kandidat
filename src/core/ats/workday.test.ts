@@ -13,6 +13,25 @@ const profile: Profile = {
   name: 'John Doe',
   email: 'john@doe.com',
   phone: '999999',
+  location: {
+    addressLine1: '123 Main St',
+    addressLine2: 'Apt 4',
+    city: 'San Francisco',
+    state: 'CA',
+    postalCode: '94105',
+    country: 'USA',
+  },
+  links: {
+    linkedin: 'www.linkedin.com/in/johndoe',
+    github: 'github.com/johndoe',
+    portfolio: 'johndoe.dev',
+    website: 'johndoe.com',
+    twitter: '@johndoe',
+  },
+  workAuthorization: {
+    authorizedToWork: true,
+    sponsorshipRequired: 'none',
+  },
 };
 
 const input = (selector: string) =>
@@ -23,32 +42,32 @@ const mountFixture = () => {
   document.body.innerHTML = parsed.body.innerHTML;
 };
 
-describe('splitName()', () => {
-  it('splits a full name into first and last name', () => {
+describe('splitName', () => {
+  it("splits a full name into first and last name", () => {
     expect(splitName('John Doe')).toEqual({
       firstName: 'John',
       lastName: 'Doe',
     });
   });
 
-  it('keeps the remaining name parts in the last name', () => {
+  it("keeps the remaining name parts in the last name", () => {
     expect(splitName('  John Ronald Reuel Tolkien  ')).toEqual({
       firstName: 'John',
       lastName: 'Ronald Reuel Tolkien',
     });
   });
 
-  it('handles a single name', () => {
+  it("handles a single name", () => {
     expect(splitName('John')).toEqual({ firstName: 'John', lastName: '' });
   });
 });
 
-describe('fillWorkday()', () => {
+describe('fillWorkday', () => {
   beforeEach(() => {
     document.body.innerHTML = '';
   });
 
-  it('fills the My Information fields from the saved profile', () => {
+  it("fills the My Information fields from the saved profile", () => {
     mountFixture();
 
     fillWorkday(profile, document);
@@ -65,7 +84,27 @@ describe('fillWorkday()', () => {
     );
   });
 
-  it('leaves fields from other Workday steps untouched', () => {
+  it("fills address fields from profile location", () => {
+    mountFixture();
+
+    fillWorkday(profile, document);
+
+    expect(
+      input('[data-automation-id="addressSection_addressLine1"]')?.value,
+    ).toBe('123 Main St');
+    expect(
+      input('[data-automation-id="addressSection_addressLine2"]')?.value,
+    ).toBe('Apt 4');
+    expect(
+      input('[data-automation-id="addressSection_city"]')?.value,
+    ).toBe('San Francisco');
+    expect(
+      input('[data-automation-id="addressSection_postalCode"]')?.value,
+    ).toBe('94105');
+    expect(input('[data-automation-id="countryRegion"]')?.value).toBe('USA');
+  });
+
+  it("leaves fields from other Workday steps untouched", () => {
     mountFixture();
 
     fillWorkday(profile, document);
@@ -74,11 +113,11 @@ describe('fillWorkday()', () => {
       input('[data-automation-id="legalNameSection_middleName"]')?.value,
     ).toBe('');
     expect(
-      input('[data-automation-id="addressSection_addressLine1"]')?.value,
+      input('[data-automation-id="workExperienceSection_jobTitle"]')?.value,
     ).toBe('');
   });
 
-  it('does not overwrite values already entered by the user', () => {
+  it("does not overwrite values already entered by the user", () => {
     mountFixture();
     const current = {
       firstName: 'Jane',
@@ -108,7 +147,7 @@ describe('fillWorkday()', () => {
     );
   });
 
-  it('skips optional profile fields that are not set', () => {
+  it("skips optional profile fields that are not set", () => {
     mountFixture();
 
     fillWorkday({ name: 'John Doe' }, document);
@@ -123,7 +162,7 @@ describe('fillWorkday()', () => {
     expect(input('[data-automation-id="phone-number"]')?.value).toBe('');
   });
 
-  it('no-ops when the My Information step is absent', () => {
+  it "no-ops when the My Information step is absent", () => {
     document.body.innerHTML = `
       <form data-automation-id="applyFlowPage">
         <input
@@ -155,9 +194,9 @@ describe('fillWorkday()', () => {
     setter.mockRestore();
   });
 
-  it.each(['input', 'change'])(
-    'dispatches bubbling %s events for filled fields',
-    (eventName) => {
+  it.each(["input", "change"])(
+    "dispatches bubbling %s events for filled fields",
+    (eventName: string) => {
       mountFixture();
       const handler = vi.fn();
       document.addEventListener(eventName, handler);
@@ -173,7 +212,7 @@ describe('fillWorkday()', () => {
     },
   );
 
-  it('does not submit the form or click navigation buttons', () => {
+  it("does not submit the form or click navigation buttons", () => {
     mountFixture();
     const submitHandler = vi.fn();
     const clickHandler = vi.fn();
@@ -189,7 +228,7 @@ describe('fillWorkday()', () => {
     expect(clickHandler).not.toHaveBeenCalled();
   });
 
-  it('can fill a scoped root element', () => {
+  it("can fill a scoped root element", () => {
     document.body.innerHTML = `
       <form id="my-information">
         <input data-automation-id="legalNameSection_firstName" />
@@ -208,4 +247,29 @@ describe('fillWorkday()', () => {
       input('[data-automation-id="legalNameSection_lastName"]')?.value,
     ).toBe('Roe');
   });
-});
+
+  it("fills links from data-automation-id in My Experience", () => {
+    mountFixture();
+
+    fillWorkday(profile, document);
+
+    expect(input('[data-automation-id="linkedin"]')?.value).toBe(
+      profile.links?.linkedin || '',
+    );
+    expect(input('[data-automation-id="github"]')?.value).toBe(
+      profile.links?.github || '',
+    );
+    expect(input('[data-automation-id="portfolio"]')?.value).toBe(
+      profile.links?.portfolio || '',
+    );
+    expect(input('[data-automation-id="website"]')?.value).toBe(
+      profile.links?.website || '',
+    );
+  });
+
+  it("fills work authorization yes from radio label", () => {
+    mountFixture();
+
+    fillWorkday(profile, document);
+
+    const yesRadio = input('input[value="yes"]');

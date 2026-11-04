@@ -14,6 +14,24 @@ const profile: Profile = {
   email: 'john@doe.com',
   phone: '999999',
   linkedin: 'www.linkedin.com/in/john-doe',
+  location: {
+    addressLine1: '123 Main St',
+    city: 'San Francisco',
+    state: 'CA',
+    postalCode: '94105',
+    country: 'USA',
+  },
+  links: {
+    linkedin: 'www.linkedin.com/in/johndoe',
+    github: 'github.com/johndoe',
+    portfolio: 'johndoe.dev',
+    website: 'johndoe.com',
+    twitter: '@johndoe',
+  },
+  workAuthorization: {
+    authorizedToWork: true,
+    sponsorshipRequired: 'none',
+  },
 };
 
 const input = (selector: string) =>
@@ -24,7 +42,7 @@ const mountFixture = () => {
   document.body.innerHTML = parsed.body.innerHTML;
 };
 
-describe('splitName()', () => {
+describe('splitName', () => {
   it('splits a full name into first and last name', () => {
     expect(splitName('John Doe')).toEqual({
       firstName: 'John',
@@ -44,7 +62,7 @@ describe('splitName()', () => {
   });
 });
 
-describe('fillGreenhouse()', () => {
+describe('fillGreenhouse', () => {
   beforeEach(() => {
     document.body.innerHTML = '';
   });
@@ -59,6 +77,28 @@ describe('fillGreenhouse()', () => {
     expect(input('#email')?.value).toBe(profile.email);
     expect(input('#phone')?.value).toBe(profile.phone);
     expect(input('#question_123')?.value).toBe(profile.linkedin);
+  });
+
+  it('fills location in short format', () => {
+    mountFixture();
+
+    fillGreenhouse(profile, document);
+
+    const locationInput = input('input[name="job_application[location]"]') ||
+      input('#location') ||
+      input('input[name="location"]');
+    expect(locationInput?.value).toBe('San Francisco, CA, USA');
+  });
+
+  it('fills GitHub, Portfolio, Website, Twitter links from profile', () => {
+    mountFixture();
+
+    fillGreenhouse(profile, document);
+
+    expect(input('[id*="github"]')?.value).toBe(profile.links?.github || '');
+    expect(input('[id*="portfolio"]')?.value).toBe(profile.links?.portfolio || '');
+    expect(input('[id*="website"]')?.value).toBe(profile.links?.website || '');
+    expect(input('[id*="twitter"]')?.value).toBe(profile.links?.twitter || '');
   });
 
   it('leaves unrecognized custom question fields untouched', () => {
@@ -133,5 +173,38 @@ describe('fillGreenhouse()', () => {
 
     expect(input('#first_name')?.value).toBe('Jane');
     expect(input('#last_name')?.value).toBe('Roe');
+  });
+
+  it('fills work authorization yes from question label', () => {
+    mountFixture();
+
+    fillGreenhouse(profile, document);
+
+    const authInput = input('#question_auth');
+    expect(authInput?.value).toBe('yes');
+  });
+
+  it('fills work authorization no from question label', () => {
+    const profileNoAuth = {
+      ...profile,
+      workAuthorization: {
+        authorizedToWork: false,
+        sponsorshipRequired: 'none',
+      },
+    };
+
+    mountFixture();
+    fillGreenhouse(profileNoAuth, document);
+
+    const authInput = input('#question_auth');
+    expect(authInput?.value).toBe('no');
+  });
+
+  it('does not fill unrelated question_* fields', () => {
+    mountFixture();
+
+    fillGreenhouse(profile, document);
+
+    expect(input('#question_456')?.value).toBe('');
   });
 });
