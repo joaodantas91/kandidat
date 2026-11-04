@@ -293,19 +293,24 @@ Important form behaviors:
     - **Strict Invariants:** Zero `as any`, zero `@ts-ignore`, pure Svelte 5 runes (`$state`, `$derived`, `$props`), zero new npm dependencies.
   - **Criteria:** Tests verify form renders in dark theme, inputs remain fully accessible with proper `id` and `label` associations, validation still works, and `bunx vitest run` passes with exit code 0.
 
-- [ ] **TASK-DS-01: Global Design System, Design Tokens & Unified Component CSS**
-  - **Goal:** Unify all extension styling under a cohesive design token system (`src/styles/tokens.css` and `src/styles/components.css`) eliminating scattered hex codes, inconsistent paddings, and repetitive component CSS.
+- [ ] **TASK-DS-01: Global Design System, Design Tokens & Unified Component CSS (Keywords Filter Baseline)**
+  - **Goal:** Eliminate jarring visual differences between "Keywords Filters" and "Profile Settings" by establishing the Keywords Filter design (`src/entrypoints/options/Options.svelte`) as the universal golden standard. Unify all inputs, buttons, cards, and spacing under global design tokens (`src/styles/tokens.css`) and reusable component CSS (`src/styles/components.css`).
+  - **Context & Current Discrepancy:**
+    - "Keywords Filters" (`Options.svelte`) has a crisp, compact, dark aesthetic: `#111` canvas, `#1c1c1c` tags/cards, `1px solid #333` borders, `6px 10px` input padding, `12px` font size, and white/subtle focus highlights (`#eaeaea`).
+    - "Profile Settings" (`ProfileManager.svelte`) currently uses disparate styling: bloated inputs (`0.95rem`, `8px 12px` padding), mismatched background shades (`#1a1a1a`), blue accent checkboxes (`#2c7be5`), and disconnected button styles.
+    - The entire application (Profile Manager, Keywords Filter, and Popup) must strictly adhere to the compact, clean visual language of the Keywords Filter.
   - **Files:** `src/styles/tokens.css` (new), `src/styles/components.css` (new), `src/entrypoints/popup/app.css`, `src/entrypoints/options/Options.svelte`, `src/entrypoints/options/ProfileManager.svelte`, `src/lib/applications.svelte`.
-  - **Design Tokens (`tokens.css`):**
-    - Color tokens: `--color-bg-canvas` (#0a0a0a), `--color-bg-surface` (#121212), `--color-bg-elevated` (#1a1a1a), `--color-bg-input` (#161616), `--color-border-subtle` (#262626), `--color-border-default` (#333333), `--color-border-focus` (#ffffff), `--color-text-primary` (#f5f5f5), `--color-text-secondary` (#a3a3a3), `--color-text-muted` (#737373), `--color-primary` (#2563eb), `--color-primary-hover` (#1d4ed8), `--color-success` (#10b981), `--color-danger` (#ef4444).
+  - **Design Tokens (`src/styles/tokens.css`):**
+    - Color tokens: `--color-bg-canvas` (#111111), `--color-bg-surface` (#181818), `--color-bg-elevated` (#1c1c1c), `--color-bg-input` (#161616), `--color-border-subtle` (#282828), `--color-border-default` (#333333), `--color-border-hover` (#444444), `--color-border-focus` (#eaeaea), `--color-text-primary` (#eaeaea), `--color-text-secondary` (#888888), `--color-text-muted` (#666666), `--color-accent` (#eaeaea), `--color-destructive` (#ff6b6b).
     - Spacing scale: `--space-1` (4px), `--space-2` (8px), `--space-3` (12px), `--space-4` (16px), `--space-5` (20px), `--space-6` (24px), `--space-8` (32px).
-    - Typography scale: `--font-xs` (11px), `--font-sm` (12px), `--font-base` (14px), `--font-lg` (16px), `--font-xl` (18px), `--font-2xl` (20px).
-    - Radii: `--radius-sm` (4px), `--radius-md` (6px), `--radius-lg` (8px), `--radius-full` (9999px).
-  - **Unified Component Classes (`components.css`):**
-    - Standard form controls (`.form-input`, `.form-textarea`, `.form-select`, plus element defaults) ensuring inputs across Popup and Options have identical height, padding, font-size, background, and focus glow.
-    - Standard button variants: `.btn`, `.btn-primary`, `.btn-secondary`, `.btn-danger`, `.btn-sm`.
-    - Standard card containers: `.card`, `.card-header`, `.form-group`, `.form-label`, `.grid-2col`, `.badge`.
-  - **Criteria:** Design tokens and component styles imported into popup and options; all components refactored to consume tokens instead of raw hex values; visual appearance remains dark, crisp, and 100% consistent across Popup and Options; `bunx vitest run` and `bun run check` pass with exit code 0.
+    - Typography scale: `--font-xs` (11px), `--font-sm` (12px), `--font-base` (13px), `--font-md` (14px), `--font-lg` (16px), `--font-xl` (20px).
+    - Radii: `--radius-sm` (4px), `--radius-md` (6px), `--radius-lg` (8px).
+  - **Unified Component Classes (`src/styles/components.css`):**
+    - Standard Inputs (`.input-field` / global `input`, `select`, `textarea`): Compact `padding: 6px 10px`, `font-size: 12px`, `background: var(--color-bg-input)`, `border: 1px solid var(--color-border-default)`, `border-radius: var(--radius-sm)`, focus outline to `var(--color-border-focus)`.
+    - Standard Buttons: `.btn`, `.btn-primary` (solid white text on dark or accent), `.btn-secondary` (`border: 1px solid #444`, hover `#888`), `.btn-destructive` (hover `#ff6b6b`), `.btn-sm` (`padding: 3px 8px`, `font-size: 11px`), `.reset-btn`.
+    - Standard Tags & Cards: `.tag` (matching `.keyword-tag`: `background: #1c1c1c`, `border: 1px solid #333`, `padding: 4px 8px`, `font-size: 12px`), `.card` (matching `.options-container` & `.profile-wrapper`).
+    - Standard Checkbox/Radio: `accent-color: var(--color-text-primary, #eaeaea)`.
+  - **Criteria:** Design tokens and component styles imported into popup and options; all components in ProfileManager and Options refactored to consume tokens; inputs in Profile Settings look and behave identically to inputs in Keywords Filters; `bunx vitest run` passes with exit code 0 and zero `as any`.
 
 - [ ] **TASK-22: Profile-Powered Inline Quick Fill Action Bar**
   - **Goal:** Inject a lightweight floating action bar on supported ATS pages when form fields are detected, providing a one-click "Fill Form" button and a dropdown preview of the candidate's active profile data.
