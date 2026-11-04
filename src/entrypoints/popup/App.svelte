@@ -1,5 +1,6 @@
 <script lang="ts">
   import Applications from '../../lib/applications.svelte';
+  import Toast from '@/lib/Toast.svelte';
 
   let openOptionsPage = $state(false);
 
@@ -15,6 +16,8 @@
     <span class="status-dot" aria-label="Active"></span>
     <button class="settings-btn" onclick="{handleSettingsClick}">Settings</button>
   </header>
+
+  <Toast />
 
   <main class="content">
     <Applications />

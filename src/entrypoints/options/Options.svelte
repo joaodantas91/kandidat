@@ -9,7 +9,9 @@
     DEFAULT_BLACKLIST_KEYWORDS,
     type Settings,
   } from '@/core/storage/settings';
+  import { showToast, dismissToast, toasts } from '@/lib/toastStore';
   import ProfileForm from '@/lib/ProfileForm.svelte';
+  import Toast from '@/lib/Toast.svelte';
 
   let activeTab: 'keywords' | 'profile' = $state('keywords');
   let keywords: string[] = $state([]);
@@ -17,6 +19,7 @@
   let newKeywordInput: string = $state('');
   let statusMessage: string = $state('');
   let statusTimeout: ReturnType<typeof setTimeout> | undefined;
+  let toastId: string | undefined;
 
   function showStatus(msg: string) {
     statusMessage = msg;
@@ -24,6 +27,10 @@
     statusTimeout = setTimeout(() => {
       statusMessage = '';
     }, 2500);
+  }
+
+  function showToastMessage(msg: string, type: 'info' | 'success' | 'error' = 'info') {
+    toastId = showToast(msg, type);
   }
 
   onMount(async () => {
@@ -67,11 +74,14 @@
     const res = await resetSettings();
     keywords = [...res.blacklistKeywords];
     autoFilterEnabled = res.autoFilterEnabled ?? true;
+    showToastMessage('Settings saved', 'success');
     showStatus('Reset keywords to defaults');
   }
 </script>
 
 <div class="options-container">
+  <Toast />
+
   <header>
     <h1>Kandidat Options</h1>
     <p class="subtitle">Customize job feed filters & candidate profile</p>
