@@ -1,4 +1,4 @@
-import { autofill } from '@/core/autofill/autofill';
+import { fillApplication } from '@/core/ats';
 import { getProfile } from '@/core/storage/storage';
 
 export const AUTO_FILL_MESSAGE = 'AUTO_FILL';
@@ -75,7 +75,7 @@ const BUTTON_STYLES = `
 async function fillProfile() {
   try {
     const profile = await getProfile();
-    if (profile) autofill({ profile });
+    if (profile) fillApplication(profile, new URL(location.href));
   } catch (error) {
     console.error('Kandidat autofill failed:', error);
   }
