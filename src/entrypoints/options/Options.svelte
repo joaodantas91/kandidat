@@ -139,8 +139,9 @@ import Toast from '@/lib/Toast.svelte';
             placeholder="Add keyword or company..."
             bind:value={newKeywordInput}
             aria-label="New keyword to blacklist"
+            class="input-field"
           />
-          <button type="submit">Add Filter</button>
+          <button type="submit" class="btn-primary">Add Filter</button>
         </form>
 
         <div class="keywords-header">
@@ -188,121 +189,122 @@ import Toast from '@/lib/Toast.svelte';
       </section>
     {/if}
   </main>
-</div>
+</div><style>
+  @import '/src/styles/tokens.css';
+  @import '/src/styles/components.css';
 
-<style>
   .options-container {
     max-width: 640px;
-    margin: 32px auto;
-    padding: 24px;
-    background: var(--black, #111);
-    color: var(--white, #eaeaea);
-    border: 1px solid #333;
-    border-radius: 8px;
+    margin: var(--space-8) auto;
+    padding: var(--space-4);
+    background: var(--color-bg-canvas);
+    color: var(--color-text-primary);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-md);
     box-sizing: border-box;
   }
 
   header {
-    margin-bottom: 20px;
-    border-bottom: 1px solid #282828;
-    padding-bottom: 12px;
+    margin-bottom: var(--space-5);
+    border-bottom: 1px solid var(--color-border-subtle);
+    padding-bottom: var(--space-3);
   }
 
   h1 {
-    font-size: 20px;
-    margin: 0 0 6px 0;
+    font-size: var(--font-xl);
+    margin: 0 0 var(--space-3) 0;
   }
 
   .subtitle {
-    font-size: 12px;
-    color: #888;
+    font-size: var(--font-sm);
+    color: var(--color-text-secondary);
     margin: 0;
   }
 
   .tabs {
     display: flex;
-    gap: 8px;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #282828;
-    padding-bottom: 8px;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+    border-bottom: 1px solid var(--color-border-subtle);
+    padding-bottom: var(--space-2);
   }
 
   .tab-btn {
     background: transparent;
     border: 1px solid transparent;
-    color: #888;
-    padding: 6px 12px;
-    font-size: 12px;
-    border-radius: 4px;
+    color: var(--color-text-secondary);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-sm);
+    border-radius: var(--radius-sm);
     cursor: pointer;
     transition: all 0.15s ease;
   }
 
   .tab-btn:hover {
-    color: var(--white, #eaeaea);
-    border-color: #444;
+    color: var(--color-text-primary);
+    border-color: var(--color-border-default);
   }
 
   .tab-btn.active {
-    background: #222;
-    color: var(--white, #eaeaea);
-    border-color: var(--white, #eaeaea);
+    background: var(--color-bg-elevated);
+    color: var(--color-text-primary);
+    border-color: var(--color-text-primary);
   }
 
   .status-banner {
-    background: #1c2e1c;
-    border: 1px solid #3d7e3d;
-    color: #85e885;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 11px;
-    margin-bottom: 16px;
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-focus);
+    color: var(--color-text-primary);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-sm);
+    margin-bottom: var(--space-6);
   }
 
   .section h2 {
-    font-size: 16px;
-    margin: 0 0 8px 0;
+    font-size: var(--font-lg);
+    margin: 0 0 var(--space-3) 0;
   }
 
   .description {
-    font-size: 12px;
-    color: #999;
+    font-size: var(--font-sm);
+    color: var(--color-text-muted);
     line-height: 1.5;
-    margin: 0 0 16px 0;
+    margin: 0 0 var(--space-4) 0;
   }
 
   .toggle-row {
-    margin-bottom: 16px;
+    margin-bottom: var(--space-4);
   }
 
   .toggle-label {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--space-2);
     cursor: pointer;
-    font-size: 12px;
+    font-size: var(--font-sm);
   }
 
   .toggle-label input[type='checkbox'] {
     cursor: pointer;
-    accent-color: var(--white, #eaeaea);
+    accent-color: var(--color-text-primary);
   }
 
   .add-keyword-form {
     display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
   }
 
   .add-keyword-form input {
     flex: 1;
-    padding: 6px 10px;
-    font-size: 12px;
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-sm);
   }
 
   .add-keyword-form button {
-    padding: 6px 12px;
-    font-size: 12px;
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-sm);
     white-space: nowrap;
   }
 
@@ -310,26 +312,27 @@ import Toast from '@/lib/Toast.svelte';
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: var(--space-3);
   }
 
   .count {
-    font-size: 11px;
-    color: #888;
+    font-size: var(--font-xs);
+    color: var(--color-text-secondary);
   }
 
   .reset-btn {
-    font-size: 11px;
+    font-size: var(--font-xs);
     background: transparent;
-    border: 1px solid #444;
-    color: #aaa;
-    padding: 3px 8px;
+    border: 1px solid var(--color-border-default);
+    color: var(--color-text-secondary);
+    padding: var(--space-1) var(--space-2);
     cursor: pointer;
+    transition: border-color 0.15s ease, color 0.15s ease;
   }
 
   .reset-btn:hover {
     border-color: #888;
-    color: var(--white, #eaeaea);
+    color: var(--color-text-primary);
   }
 
   .keywords-list {
@@ -338,18 +341,18 @@ import Toast from '@/lib/Toast.svelte';
     margin: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: var(--space-2);
   }
 
   .keyword-tag {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    background: #1c1c1c;
-    border: 1px solid #333;
-    border-radius: 4px;
-    padding: 4px 8px;
-    font-size: 12px;
+    gap: var(--space-1);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--font-sm);
   }
 
   .keyword-text {
@@ -359,27 +362,20 @@ import Toast from '@/lib/Toast.svelte';
   .remove-btn {
     background: transparent;
     border: none;
-    color: #777;
+    color: var(--color-text-muted);
     cursor: pointer;
-    padding: 0 2px;
-    font-size: 11px;
+    padding: 0 var(--space-1);
+    font-size: var(--font-xs);
     line-height: 1;
   }
 
   .remove-btn:hover {
-    color: #ff6b6b;
+    color: var(--color-destructive);
   }
 
   .empty-state {
-    font-size: 12px;
-    color: #666;
+    font-size: var(--font-sm);
+    color: var(--color-text-muted);
     font-style: italic;
-  }
-
-  .profile-wrapper {
-    background: #181818;
-    padding: 16px;
-    border-radius: 6px;
-    border: 1px solid #282828;
   }
 </style>

@@ -2,7 +2,14 @@
   import { onMount } from 'svelte';
   import { getProfile, setProfile } from '@/core/storage/storage';
   import { showToast } from '@/lib/toastStore';
-  import type { Profile, ProfileLocation, ProfileLinks, WorkAuthorization, Compensation, Experience } from '@/core/storage/storage';
+  import type {
+    Profile,
+    ProfileLocation,
+    ProfileLinks,
+    WorkAuthorization,
+    Compensation,
+    Experience,
+  } from '@/core/storage/storage';
 
   let profile: Profile | null = $state(null);
   let isDirty: boolean = $state(true);
@@ -402,6 +409,7 @@
           bind:value={name}
           oninput={markDirty}
           required
+          class="input-field"
         />
       </div>
 
@@ -413,6 +421,7 @@
           type="text"
           bind:value={firstName}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -424,6 +433,7 @@
           type="text"
           bind:value={middleName}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -435,6 +445,7 @@
           type="text"
           bind:value={lastName}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -446,6 +457,7 @@
           type="text"
           bind:value={preferredName}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -457,6 +469,7 @@
           type="text"
           bind:value={pronouns}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
     </div>
@@ -473,6 +486,7 @@
           type="email"
           bind:value={email}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -484,6 +498,7 @@
           type="email"
           bind:value={alternateEmail}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -495,6 +510,7 @@
           type="tel"
           bind:value={phone}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -506,6 +522,7 @@
           type="tel"
           bind:value={alternatePhone}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
     </div>
@@ -522,6 +539,7 @@
           type="text"
           bind:value={addressLine1}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -533,6 +551,7 @@
           type="text"
           bind:value={addressLine2}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -544,6 +563,7 @@
           type="text"
           bind:value={city}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -555,6 +575,7 @@
           type="text"
           bind:value={state}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -566,6 +587,7 @@
           type="text"
           bind:value={postalCode}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -577,6 +599,7 @@
           type="text"
           bind:value={country}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -588,6 +611,7 @@
           type="text"
           bind:value={countryCode}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
     </div>
@@ -604,6 +628,7 @@
           type="url"
           bind:value={linkedin}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -615,6 +640,7 @@
           type="url"
           bind:value={github}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -626,6 +652,7 @@
           type="url"
           bind:value={portfolio}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -637,6 +664,7 @@
           type="url"
           bind:value={website}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -648,6 +676,7 @@
           type="url"
           bind:value={twitter}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -659,6 +688,7 @@
           type="url"
           bind:value={stackoverflow}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -670,6 +700,7 @@
           type="url"
           bind:value={dribbble}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -681,6 +712,7 @@
           type="text"
           bind:value={other}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
     </div>
@@ -699,6 +731,7 @@
             authorizedToWork = (e.target as HTMLInputElement).checked;
             markDirty();
           }}
+          class="input-field"
         />
         <label for="authorizedToWork">Authorized to Work</label>
       </div>
@@ -710,6 +743,7 @@
           name="sponsorshipRequired"
           bind:value={sponsorshipRequired}
           onchange={markDirty}
+          class="input-field"
         >
           <option value="">None / Unspecified</option>
           <option value="none">None</option>
@@ -727,6 +761,7 @@
           type="text"
           bind:value={workPermitType}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -738,6 +773,7 @@
           type="text"
           bind:value={citizenship}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -751,6 +787,7 @@
             willingToRelocate = (e.target as HTMLInputElement).checked;
             markDirty();
           }}
+          class="input-field"
         />
         <label for="willingToRelocate">Willing to Relocate</label>
       </div>
@@ -765,6 +802,7 @@
             willingToTravel = (e.target as HTMLInputElement).checked;
             markDirty();
           }}
+          class="input-field"
         />
         <label for="willingToTravel">Willing to Travel</label>
       </div>
@@ -783,6 +821,7 @@
           bind:value={currency}
           oninput={markDirty}
           placeholder="USD"
+          class="input-field"
         />
       </div>
 
@@ -793,6 +832,7 @@
           name="salaryPeriod"
           bind:value={salaryPeriod}
           onchange={markDirty}
+          class="input-field"
         >
           <option value="">Select period</option>
           <option value="annual">Annual</option>
@@ -809,6 +849,7 @@
           type="number"
           bind:value={desiredSalary}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -820,6 +861,7 @@
           type="number"
           bind:value={minimumSalary}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -831,6 +873,7 @@
           type="number"
           bind:value={currentSalary}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
     </div>
@@ -847,6 +890,7 @@
           type="text"
           bind:value={currentCompany}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -858,6 +902,7 @@
           type="text"
           bind:value={currentTitle}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -869,6 +914,7 @@
           type="number"
           bind:value={yearsOfExperience}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -880,6 +926,7 @@
           type="text"
           bind:value={highestDegree}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -891,6 +938,7 @@
           type="text"
           bind:value={university}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -902,6 +950,7 @@
           type="text"
           bind:value={fieldOfStudy}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -913,6 +962,7 @@
           type="number"
           bind:value={graduationYear}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -924,6 +974,7 @@
           type="text"
           bind:value={noticePeriod}
           oninput={markDirty}
+          class="input-field"
         />
       </div>
 
@@ -936,6 +987,7 @@
           bind:value={availableStartDate}
           oninput={markDirty}
           placeholder="YYYY-MM-DD"
+          class="input-field"
         />
       </div>
 
@@ -947,6 +999,7 @@
           rows="4"
           bind:value={summary}
           oninput={markDirty}
+          class="input-field"
         ></textarea>
       </div>
     </div>
@@ -968,9 +1021,10 @@
       Reset / Reload
     </button>
   </div>
-</form>
+</form><style>
+  @import '/src/styles/tokens.css';
+  @import '/src/styles/components.css';
 
-<style>
   .profile-form {
     display: flex;
     flex-direction: column;
@@ -978,28 +1032,28 @@
   }
 
   .profile-fieldset {
-    background: #111;
-    border: 1px solid #282828;
-    border-radius: 6px;
-    padding: 20px;
-    margin-bottom: 20px;
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
     box-sizing: border-box;
   }
 
   legend {
     text-transform: uppercase;
     font-weight: 600;
-    color: #eaeaea;
-    font-size: 0.85rem;
+    color: var(--color-text-primary);
+    font-size: 0.9rem;
     letter-spacing: 0.05em;
-    padding: 0 6px;
+    padding: 0 var(--space-2);
   }
 
   .form-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 16px;
-    margin-top: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-4);
+    margin-top: var(--space-3);
   }
 
   .grid-full {
@@ -1009,12 +1063,12 @@
   .form-group {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: var(--space-2);
   }
 
   .form-group label {
     font-size: 0.85rem;
-    color: #aaa;
+    color: var(--color-text-secondary);
     font-weight: 500;
   }
 
@@ -1025,12 +1079,12 @@
   input[type='number'],
   select,
   textarea {
-    background: #1a1a1a;
-    border: 1px solid #333;
-    color: #eaeaea;
-    border-radius: 4px;
-    padding: 8px 12px;
-    font-size: 0.95rem;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border-default);
+    color: var(--color-text-primary);
+    border-radius: var(--radius-sm);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-sm);
     box-sizing: border-box;
     width: 100%;
     transition: border-color 0.15s ease;
@@ -1040,45 +1094,45 @@
   select:focus,
   textarea:focus {
     outline: none;
-    border-color: #fff;
+    border-color: var(--color-border-focus);
   }
 
   .checkbox-row {
     flex-direction: row;
     align-items: center;
-    gap: 10px;
+    gap: var(--space-2);
     cursor: pointer;
-    margin-top: 4px;
+    margin-top: var(--space-1);
   }
 
   .checkbox-row input[type='checkbox'] {
     width: 16px;
     height: 16px;
-    accent-color: #2c7be5;
+    accent-color: var(--color-text-primary);
     cursor: pointer;
   }
 
   .checkbox-row label {
     cursor: pointer;
-    color: #eaeaea;
+    color: var(--color-text-primary);
     font-size: 0.9rem;
   }
 
   .form-actions {
     display: flex;
-    gap: 12px;
+    gap: var(--space-4);
     align-items: center;
-    margin-top: 8px;
-    margin-bottom: 24px;
+    margin-top: var(--space-4);
+    margin-bottom: var(--space-8);
   }
 
   .save-btn {
-    background: #2c7be5;
-    color: #fff;
+    background: var(--color-accent);
+    color: #111;
     border: none;
-    border-radius: 4px;
-    padding: 8px 18px;
-    font-size: 0.95rem;
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--font-md);
     font-weight: 500;
     cursor: pointer;
     transition: background 0.15s ease;
@@ -1097,17 +1151,17 @@
 
   .reset-btn {
     background: transparent;
-    border: 1px solid #444;
-    color: #aaa;
-    border-radius: 4px;
-    padding: 8px 16px;
-    font-size: 0.95rem;
+    border: 1px solid var(--color-border-default);
+    color: var(--color-text-secondary);
+    border-radius: var(--radius-md);
+    padding: var(--space-2) var(--space-3);
+    font-size: var(--font-sm);
     cursor: pointer;
     transition: border-color 0.15s ease, color 0.15s ease;
   }
 
   .reset-btn:hover {
     border-color: #888;
-    color: #eaeaea;
+    color: var(--color-text-primary);
   }
 </style>
