@@ -11,7 +11,7 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Files:** `src/lib/home.svelte`, `src/entrypoints/content.ts`.
   - **Criteria:** Active tab is queried via `browser.tabs.query`, message sent via `browser.tabs.sendMessage(tab.id, 'AUTO_FILL')`. Handled cleanly in `content.ts`.
 
-- [ ] **TASK-02: Pre-populate Popup Profile Form on Open**
+- [x] **TASK-02: Pre-populate Popup Profile Form on Open**
   - **Goal:** When opening popup, if profile data exists in storage (`getProfile()`), populate form inputs so user sees saved data.
   - **Files:** `src/lib/ProfileForm.svelte` (or `src/lib/profile.svelte`).
   - **Criteria:** Runs on mount. Clean fallback if storage is empty.
