@@ -200,7 +200,7 @@
   onMount(async () => {
     profile = await getProfile();
     if (profile) {
-      name = profile.name;
+      name = profile.name ?? '';
       firstName = profile.firstName ?? '';
       middleName = profile.middleName ?? '';
       lastName = profile.lastName ?? '';
@@ -229,7 +229,7 @@
       other = profile.links?.other ?? '';
 
       authorizedToWork = profile.workAuthorization?.authorizedToWork ?? false;
-      sponsorshipRequired = profile.workAuthorization?.sponsorshipRequired;
+      sponsorshipRequired = profile.workAuthorization?.sponsorshipRequired ?? '';
       workPermitType = profile.workAuthorization?.workPermitType ?? '';
       citizenship = profile.workAuthorization?.citizenship ?? '';
       willingToRelocate = profile.workAuthorization?.willingToRelocate ?? false;

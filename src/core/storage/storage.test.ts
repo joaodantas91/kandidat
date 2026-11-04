@@ -1,5 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
+import type { Profile } from './storage';
+
+type ExtraProfile = Profile & Record<string, unknown>;
+
 import {
   PROFILE_SCHEMA_VERSION,
   ProfileValidationError,
@@ -129,10 +133,10 @@ describe('updateProfile', () => {
 
   it('preserves unknown top-level keys', async () => {
     fakeBrowser.reset();
-    await setProfile({ name: 'John', extraKey: 'preserved' } as any);
+    await setProfile({ name: 'John', extraKey: 'preserved' } as ExtraProfile);
     await updateProfile({ phone: '123' });
     const profile = await getProfile();
-    expect((profile as any)?.extraKey).toBe('preserved');
+    expect((profile as ExtraProfile)?.extraKey).toBe('preserved');
   });
 });
 

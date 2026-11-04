@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import type { Profile } from '@/core/storage/storage';
+import type { ContentScriptContext } from 'wxt/client';
+
+const mockCtx: ContentScriptContext = {};
 
 const mocks = vi.hoisted(() => ({
   fillApplication: vi.fn(),
@@ -31,7 +34,7 @@ describe('content entrypoint', () => {
 
   it('routes AUTO_FILL messages through fillApplication', async () => {
     mocks.getProfile.mockResolvedValue(profile);
-    content.main({} as any);
+    content.main(mockCtx);
 
     await fakeBrowser.runtime.sendMessage('AUTO_FILL');
 
@@ -43,7 +46,7 @@ describe('content entrypoint', () => {
 
   it('does nothing when no profile is saved', async () => {
     mocks.getProfile.mockResolvedValue(null);
-    content.main({} as any);
+    content.main(mockCtx);
 
     await fakeBrowser.runtime.sendMessage('AUTO_FILL');
 
@@ -53,7 +56,7 @@ describe('content entrypoint', () => {
   it('swallows autofill failures', async () => {
     mocks.getProfile.mockRejectedValue(new Error('storage offline'));
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
-    content.main({} as any);
+    content.main(mockCtx);
 
     await fakeBrowser.runtime.sendMessage('AUTO_FILL');
 
