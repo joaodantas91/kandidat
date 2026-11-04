@@ -191,3 +191,14 @@ _No blocking or security issues. LOW-severity hardening items are recorded below
   - `[INFO]` Storage model in `src/core/storage/applications.ts` uses strictly typed schema (`ApplicationRecord`) and deduplicates by URL.
   - `[INFO]` No prototype pollution or unsafe setter overrides.
   - `[INFO]` No Manifest V3 permission creep.
+
+---
+
+## Audit: TASK-20 Popup Dashboard & Standalone Options Tab (2026-11-04)
+
+- Audited commit range: `84a1336..974fb60`
+- Findings:
+  - `[INFO] Svelte 5 Event Syntax vs CSP`: Sentinel flagged `onclick` in `App.svelte` as potentially violating Manifest V3 CSP. Confirmed false positive: In Svelte 5 runes mode, `onclick` is the canonical declarative event prop and compiles directly into JS bundle event listeners via Vite (`.output/chrome-mv3/chunks/`). `popup.html` contains only `<div id="app"></div>` with zero inline handlers.
+  - `[INFO] WXT Open-in-Tab Meta Tag`: Verified `<meta name="manifest.open_in_tab" content="true" />` in `options/index.html`. Successfully compiles to `"options_ui": {"open_in_tab": true}` in MV3 `manifest.json`.
+  - `[INFO]` No prototype pollution, no unsafe innerHTML injections, zero permission escalation.
+- Status: **Core invariants verified clean**.
