@@ -6,6 +6,9 @@ export default defineConfig({
   modules: ['@wxt-dev/module-svelte'],
   manifest: {
     permissions: ['storage'],
+    options_ui: {
+      open_in_tab: true,
+    },
   },
   hooks: {
     'entrypoints:found': (_wxt, entrypoints) => {
