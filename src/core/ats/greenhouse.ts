@@ -1,4 +1,7 @@
 import type { Profile } from '../storage/storage';
+import { setInputValue, splitName } from '../dom/setter';
+
+export { splitName };
 
 const FIRST_NAME_SELECTORS = [
   '#first_name',
@@ -34,11 +37,6 @@ const LINKEDIN_SELECTORS = [
 
 const QUESTION_FIELD = /(^|[\s_-])question_/i;
 const LINKEDIN_TEXT = /linked\s*in/i;
-
-export const splitName = (name: string) => {
-  const [firstName = '', ...rest] = name.trim().split(/\s+/);
-  return { firstName, lastName: rest.join(' ') };
-};
 
 const findInput = (root: ParentNode, selectors: readonly string[]) => {
   for (const selector of selectors) {
@@ -78,22 +76,6 @@ const findLinkedInQuestion = (root: ParentNode) => {
   }
 
   return null;
-};
-
-const setInputValue = (input: HTMLInputElement, value: string) => {
-  const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLInputElement.prototype,
-    'value',
-  )?.set;
-
-  if (nativeInputValueSetter) {
-    nativeInputValueSetter.call(input, value);
-  } else {
-    input.value = value;
-  }
-
-  input.dispatchEvent(new Event('input', { bubbles: true }));
-  input.dispatchEvent(new Event('change', { bubbles: true }));
 };
 
 const fillField = (

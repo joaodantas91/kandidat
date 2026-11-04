@@ -1,4 +1,5 @@
 import type { Profile } from '../storage/storage';
+import { setInputValue } from '../dom/setter';
 
 export type LeverProfile = Profile & {
   company?: string;
@@ -41,22 +42,6 @@ const findInput = (root: ParentNode, selectors: readonly string[]) => {
   }
 
   return null;
-};
-
-const setInputValue = (input: HTMLInputElement, value: string) => {
-  const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLInputElement.prototype,
-    'value',
-  )?.set;
-
-  if (nativeInputValueSetter) {
-    nativeInputValueSetter.call(input, value);
-  } else {
-    input.value = value;
-  }
-
-  input.dispatchEvent(new Event('input', { bubbles: true }));
-  input.dispatchEvent(new Event('change', { bubbles: true }));
 };
 
 const fillField = (

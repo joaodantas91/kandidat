@@ -1,4 +1,7 @@
 import type { Profile } from '../storage/storage';
+import { setInputValue, splitName } from '../dom/setter';
+
+export { splitName };
 
 export const WORKDAY_FIELD_SELECTORS = {
   firstName: '[data-automation-id="legalNameSection_firstName"]',
@@ -6,27 +9,6 @@ export const WORKDAY_FIELD_SELECTORS = {
   email: '[data-automation-id="email"]',
   phone: '[data-automation-id="phone-number"]',
 } as const;
-
-export const splitName = (name: string) => {
-  const [firstName = '', ...rest] = name.trim().split(/\s+/);
-  return { firstName, lastName: rest.join(' ') };
-};
-
-const setInputValue = (input: HTMLInputElement, value: string) => {
-  const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
-    window.HTMLInputElement.prototype,
-    'value',
-  )?.set;
-
-  if (nativeInputValueSetter) {
-    nativeInputValueSetter.call(input, value);
-  } else {
-    input.value = value;
-  }
-
-  input.dispatchEvent(new Event('input', { bubbles: true }));
-  input.dispatchEvent(new Event('change', { bubbles: true }));
-};
 
 const fillField = (
   root: ParentNode,

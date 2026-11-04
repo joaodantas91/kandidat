@@ -1,4 +1,5 @@
 import type { Profile } from '../storage/storage';
+import { setElementValue } from '../dom/setter';
 
 export type FormField = HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement;
 
@@ -64,35 +65,6 @@ function findFormField(root: ParentNode, selectors: readonly string[]): FormFiel
   return null;
 }
 
-function getNativeValueSetter(element: FormField): ((value: string) => void) | undefined {
-  if (element instanceof HTMLInputElement) {
-    return Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value')?.set;
-  }
-  if (element instanceof HTMLTextAreaElement) {
-    return Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value')?.set;
-  }
-  if (element instanceof HTMLSelectElement) {
-    return Object.getOwnPropertyDescriptor(window.HTMLSelectElement.prototype, 'value')?.set;
-  }
-  return undefined;
-}
-
-function setFieldValue(
-  element: FormField,
-  value: NonNullable<Profile[keyof Profile]>,
-) {
-  const nativeValueSetter = getNativeValueSetter(element);
-
-  if (nativeValueSetter) {
-    nativeValueSetter.call(element, value);
-  } else {
-    element.value = value;
-  }
-
-  element.dispatchEvent(new Event('input', { bubbles: true }));
-  element.dispatchEvent(new Event('change', { bubbles: true }));
-}
-
 export const autofill = ({ root = document, profile }: Autofill) => {
   for (const { field, selectors } of FIELD_RULES) {
     const fieldValue = profile[field];
@@ -100,7 +72,7 @@ export const autofill = ({ root = document, profile }: Autofill) => {
 
     const element = findFormField(root, selectors);
     if (element && element.value.trim().length === 0) {
-      setFieldValue(element, fieldValue);
+      setElementValue(element, fieldValue);
     }
   }
 };
