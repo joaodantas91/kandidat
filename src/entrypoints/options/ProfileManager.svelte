@@ -701,12 +701,20 @@
     </div>
 
     <div class="form-group">
-      <input type="checkbox" />
+      <input
+        type="checkbox"
+        name="willingToRelocate"
+        bind:checked={willingToRelocate}
+/>
       <span>Willing to Relocate</span>
     </div>
 
     <div class="form-group">
-      <input type="checkbox" />
+      <input
+        type="checkbox"
+        name="willingToTravel"
+        bind:checked={willingToTravel}
+/>
       <span>Willing to Travel</span>
     </div>
   </fieldset>
