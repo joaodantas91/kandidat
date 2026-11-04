@@ -50,7 +50,7 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
 
 ## Scout Discovery — ATS & Candidate Workflows (2026-11-04)
 
-- [ ] **TASK-09: ATS Platform Detection and Adapter Contract**
+- [x] **TASK-09: ATS Platform Detection and Adapter Contract**
   - **Goal:** From page URL + DOM, detect whether the active page is Lever, Greenhouse, or Workday and return a typed adapter; unknown pages return `null` so the extension no-ops.
   - **Files:** `src/core/ats/types.ts`, `src/core/ats/platform.ts`, `src/core/ats/platform.test.ts`.
   - **Criteria:** Vitest covers `jobs.lever.co/<org>/<uuid>/apply`, `job-boards.greenhouse.io/<org>/jobs/<id>`, and `<tenant>.myworkdayjobs.com/...`; returns `null` for unrelated sites; no new manifest permissions.
