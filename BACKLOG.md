@@ -105,7 +105,7 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Files:** `wxt.config.ts`, `src/entrypoints/popup/App.svelte`, `src/entrypoints/popup/App.test.ts`, `src/lib/components/tabs.svelte`.
   - **Criteria:** `wxt build` outputs manifest with `options_ui.open_in_tab: true`; clicking Settings opens standalone options page; popup defaults to application list with status indicator; Svelte 5 warnings resolved (`onclick` instead of `on:click`); unit tests pass (`bunx vitest run && bun run check`).
 
-- [ ] **TASK-21: Success/Error Toast Notification System**
+- [x] **TASK-21: Success/Error Toast Notification System**
   - **Goal:** Implement a lightweight toast notification component and service across the popup, floating action button, and options page to confirm autofill, copy, and save operations.
   - **Files:** `src/lib/Toast.svelte`, `src/lib/toastStore.ts`, `src/entrypoints/popup/App.svelte`, `src/entrypoints/floating.content.ts`, `src/entrypoints/options/Options.svelte`.
   - **Criteria:** Toast notifications appear on successful profile save, copy, or autofill trigger and auto-dismiss; unit tests verify toast store and display; all vitest tests pass.
