@@ -150,7 +150,7 @@ Important form behaviors:
   when the label/name is an exact known match; unknown custom questions remain
   untouched.
 
-- [ ] **TASK-17: Expanded Profile Schema & Storage**
+- [x] **TASK-17: Expanded Profile Schema & Storage**
   - **Goal:** Replace the four-field flat profile with a versioned, backwards-compatible candidate profile covering identity, contact, location, links, work authorization, compensation, and experience. Keep existing `name`/`email`/`phone`/`org`/`linkedin` callers working.
   - **Files:** `src/core/storage/storage.ts`, `src/core/storage/storage.test.ts`.
   - **Schema:**
