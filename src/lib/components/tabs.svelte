@@ -1,15 +1,19 @@
 <script lang="ts">
   import Home from '../home.svelte';
   import ProfileForm from '../ProfileForm.svelte';
+  import Applications from '../applications.svelte';
+  import { onMount } from 'svelte';
 
-  let tabs = [
+  let tabs = $state([
     { label: 'Home', value: 1, component: Home },
     { label: 'Info', value: 2, component: ProfileForm },
-  ];
+    { label: 'Applications', value: 3, component: Applications },
+  ]);
 
-  let activeTabValue = tabs[0]?.value;
-  const handleClick = (tabValue: (typeof tabs)[number]['value']) => () =>
-    (activeTabValue = tabValue);
+  let activeTabValue = $derived(tabs[0]?.value);
+  const handleClick = (tabValue: (typeof tabs)[number]['value']) => () => {
+    activeTabValue = tabValue;
+  };
 </script>
 
 <nav>
