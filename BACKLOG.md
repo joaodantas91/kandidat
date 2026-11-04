@@ -80,7 +80,7 @@ Autonomous task queue. The agent picks the first uncompleted task `[ ]`, impleme
   - **Files:** `src/core/dom/setter.ts`, `src/core/dom/setter.test.ts`, `src/core/ats/lever.ts`, `src/core/ats/greenhouse.ts`, `src/core/ats/workday.ts`, `src/core/autofill/autofill.ts`.
   - **Criteria:** All existing 112 Vitest tests pass with exit code 0. Zero code duplication in value setters or name splitting across modules.
 
-- [ ] **TASK-13: Route AUTO_FILL Through Detected ATS Adapter with Heuristic Fallback**
+- [x] **TASK-13: Route AUTO_FILL Through Detected ATS Adapter with Heuristic Fallback**
   - **Goal:** On `AUTO_FILL`, run the detected ATS adapter; fall back to the existing core autofill on unsupported pages. Reuse the same path for the TASK-08 floating button.
   - **Files:** `src/core/ats/index.ts`, `src/entrypoints/content.ts`, `src/entrypoints/content.test.ts`, `src/entrypoints/floating.content.ts`.
   - **Criteria:** Unit test proves the correct adapter is selected per platform, fallback runs otherwise, and adapter errors stay isolated; existing autofill tests still pass.
