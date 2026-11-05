@@ -339,6 +339,16 @@ Important form behaviors:
   - **Files:** `src/entrypoints/options/profile/ProfileExportImport.svelte`, `src/core/storage/storage.ts`, `src/entrypoints/options/Options.svelte`.
   - **Criteria:** Validates imported JSON against `PROFILE_SCHEMA_VERSION`; rejects malformed payloads; downloads clean `.json` file; unit tests cover import validation and round-trip restore.
 
+- [ ] **TASK-31: Remove Overkill Application Tracker Dashboard & Purge Tracking Bloat (PRIORITY)**
+  - **Goal:** Strip out the application tracker feature from the extension (popup dashboard, applications storage, status badges, and related tests) to eliminate extension bloat and refocus purely on high-performance autofill and profile management.
+  - **Files:** `src/entrypoints/popup/App.svelte`, `src/lib/applications.svelte` (delete), `src/core/storage/applications.ts` (delete), `src/core/storage/applications.test.ts` (delete), `src/entrypoints/popup/App.test.ts`, `src/core/ats/confirmation.ts`.
+  - **Criteria:** Application tracker UI and storage files completely removed; popup simplified to clean autofill trigger and profile status; unit tests pass with 100% exit code 0 and clean typecheck.
+
+- [ ] **TASK-32: Standardize Options & Profile Settings Button Sizes & Form Actions Layout**
+  - **Goal:** Unify all action buttons in `ProfileManager.svelte` and `Options.svelte` using consistent `.btn` design tokens, eliminate mismatched `.reset-btn`, and separate form actions (Save / Reset) from file migration actions (Export / Import) with clean visual grouping.
+  - **Files:** `src/entrypoints/options/ProfileManager.svelte`, `src/entrypoints/options/Options.svelte`, `src/styles/components.css`, `src/entrypoints/options/Options.test.ts`.
+  - **Criteria:** All buttons share identical height, padding, and typography tokens; no mismatched `.reset-btn`; clear visual separation between form actions and backup actions; passes vitest and typecheck.
+
 - [ ] **TASK-25: Keyboard Hotkeys & Accessible Focus Ring Navigation**
   - **Goal:** Add keyboard shortcuts (e.g. `Alt+Shift+F` for quick autofill trigger, `Escape` to close modal/floating bar) and high-contrast accessible focus outlines for keyboard-only navigation.
   - **Files:** `src/entrypoints/floating.content.ts`, `src/lib/components/QuickFillBar.svelte`, `src/styles/components.css`.
