@@ -54,6 +54,7 @@ describe('popup entrypoint', () => {
     expect(target.textContent).toContain('john@example.com');
     expect(target.querySelector('.profile-name')?.textContent).toContain('John Doe');
     expect(target.textContent).toContain('Profile Ready');
+    expect(target.textContent).not.toContain('●');
     expect(target.querySelector('.status-dot')).not.toBeNull();
     expect(target.textContent).toContain('Edit profile');
     expect(target.querySelector('.open-options-btn')).toBeNull();
@@ -75,6 +76,7 @@ describe('popup entrypoint', () => {
     const fillBtn = target.querySelector('.quickfill-status .btn-primary');
     expect(fillBtn).not.toBeNull();
     expect(fillBtn?.textContent).toContain('Fill Current Form');
+    expect(fillBtn?.textContent).not.toContain('⚡');
     expect(fillBtn?.getAttribute('disabled')).toBeNull();
     unmount(comp);
   });

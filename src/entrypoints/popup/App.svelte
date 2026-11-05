@@ -67,12 +67,12 @@
         </div>
         <div class="profile-status-row">
           <span class="status-badge">
-            <span class="status-dot" aria-hidden="true">●</span>
+            <span class="status-dot" aria-hidden="true"></span>
             Profile Ready
           </span>
-          <button class="edit-link" type="button" onclick="{handleSettingsClick}">
-            Edit profile →
-          </button>
+        <button class="edit-link" type="button" onclick="{handleSettingsClick}">
+          Edit profile
+        </button>
         </div>
       {:else}
         <div class="profile-info empty">
@@ -89,7 +89,7 @@
       {#if hasProfile}
         <p class="quickfill-hint">Autofill application form on the active page.</p>
         <button class="btn btn-primary" type="button" onclick="{handleTriggerAutofill}">
-          ⚡ Fill Current Form
+          Fill Current Form
         </button>
       {:else}
         <p class="quickfill-hint">Create profile to enable</p>
@@ -223,17 +223,21 @@
     border-radius: var(--radius-sm);
     padding: var(--space-1) var(--space-2);
     font-size: var(--font-sm);
-    color: var(--color-text-primary);
+    color: var(--color-text-secondary);
   }
 
   .status-dot {
-    color: rgb(16, 185, 129);
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-text-primary);
   }
 
   .edit-link {
     background: transparent;
     border: none;
-    color: var(--color-text-primary);
+    color: var(--color-text-secondary);
     font-size: var(--font-sm);
     cursor: pointer;
     padding: 0;
@@ -241,7 +245,7 @@
   }
 
   .edit-link:hover {
-    color: var(--color-accent);
+    color: var(--color-text-primary);
   }
 
   .quickfill-hint {
