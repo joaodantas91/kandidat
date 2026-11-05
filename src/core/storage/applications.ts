@@ -1,12 +1,22 @@
 import { storage } from '#imports';
 
+export type ApplicationStatus = 'Applied' | 'Interviewing' | 'Rejected' | 'Offered';
+
 export type Application = {
   company: string;
   role: string;
   url: string;
   ats: 'lever' | 'greenhouse' | 'workday';
   appliedAt: string;
+  status: ApplicationStatus;
 };
+
+export const ALL_STATUSES: ApplicationStatus[] = [
+  'Applied',
+  'Interviewing',
+  'Rejected',
+  'Offered',
+];
 
 const APPLICATIONS_KEY = 'local:applications';
 
@@ -15,7 +25,10 @@ const apps = storage.defineItem<Application[]>(APPLICATIONS_KEY, {
 });
 
 export const getApplications = async (): Promise<Application[]> => {
-  return await apps.getValue();
+  return (await apps.getValue()).map((app) => ({
+    ...app,
+    status: (app.status ?? 'Applied') as ApplicationStatus,
+  }));
 };
 
 export const setApplications = async (applications: Application[]) => {
@@ -28,12 +41,13 @@ export const addApplication = async (
   url: string,
   ats: 'lever' | 'greenhouse' | 'workday',
   appliedAt: string,
+  status: ApplicationStatus = 'Applied',
 ) => {
   const current = await getApplications();
 
   if (current.some((app) => app.url === url)) return;
 
-  const updated = [...current, { company, role, url, ats, appliedAt }];
+  const updated = [...current, { company, role, url, ats, appliedAt, status }];
 
   await setApplications(updated);
 };
@@ -41,6 +55,17 @@ export const addApplication = async (
 export const removeApplication = async (url: string) => {
   const current = await getApplications();
   const updated = current.filter((app) => app.url !== url);
+  await setApplications(updated);
+};
+
+export const updateApplicationStatus = async (
+  url: string,
+  status: ApplicationStatus,
+) => {
+  const current = await getApplications();
+  const updated = current.map((app) =>
+    app.url === url ? { ...app, status } : app,
+  );
   await setApplications(updated);
 };
 

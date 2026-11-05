@@ -68,5 +68,6 @@ export const extractConfirmationData = (): Application | null => {
     url,
     ats: platform,
     appliedAt: now,
+    status: 'Applied',
   };
 };
