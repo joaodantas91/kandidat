@@ -1,5 +1,3 @@
-import type { Application } from '../storage/applications';
-
 export type Confirmation = {
   company: string;
   role: string;
@@ -39,7 +37,7 @@ export const detectConfirmation = (): 'lever' | 'greenhouse' | 'workday' | null 
   return null;
 };
 
-export const extractConfirmationData = (): Application | null => {
+export const extractConfirmationData = (): Confirmation | null => {
   const platform = detectConfirmation();
   if (!platform) return null;
 
@@ -68,6 +66,5 @@ export const extractConfirmationData = (): Application | null => {
     url,
     ats: platform,
     appliedAt: now,
-    status: 'Applied',
   };
 };

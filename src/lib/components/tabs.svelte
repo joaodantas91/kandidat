@@ -1,12 +1,10 @@
 <script lang="ts">
   import Home from '../home.svelte';
   import ProfileForm from '../ProfileForm.svelte';
-  import Applications from '../applications.svelte';
 
   let tabs = $state([
     { label: 'Home', value: 1, component: Home },
     { label: 'Info', value: 2, component: ProfileForm },
-    { label: 'Applications', value: 3, component: Applications },
   ]);
 
   let activeTabValue = $derived(tabs[0]?.value);
@@ -34,8 +32,6 @@
         <Home />
       {:else if tab.label === 'Info'}
         <ProfileForm />
-      {:else if tab.label === 'Applications'}
-        <Applications />
       {/if}
     </div>
   {/if}
