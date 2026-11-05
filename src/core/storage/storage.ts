@@ -161,6 +161,56 @@ export const setProfile = async (profileValue: Profile): Promise<void> => {
   await profile.setValue(normalized);
 };
 
+export const exportProfileJson = async (): Promise<string> => {
+  const value = await getProfile();
+  if (!value) {
+    throw new Error('No profile to export');
+  }
+  return JSON.stringify({ schemaVersion: PROFILE_SCHEMA_VERSION, profile: value }, null, 2);
+};
+
+export const importProfileJson = async (
+  rawJson: string,
+): Promise<{ success: boolean; error?: string }> => {
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(rawJson);
+  } catch {
+    return { success: false, error: 'Invalid JSON syntax' };
+  }
+
+  if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed)) {
+    return { success: false, error: 'Invalid profile JSON: expected an object' };
+  }
+
+  const record = parsed as Record<string, unknown>;
+
+  if (record['schemaVersion'] === undefined || record['schemaVersion'] === null) {
+    return { success: false, error: 'Missing schemaVersion' };
+  }
+
+  const profileValue = record['profile'];
+  if (profileValue === null || typeof profileValue !== 'object' || Array.isArray(profileValue)) {
+    return { success: false, error: 'Missing or invalid profile section' };
+  }
+
+  const profile = profileValue as Profile;
+  if (!profile.name || !profile.name.trim()) {
+    return { success: false, error: 'Profile name must not be empty' };
+  }
+
+  try {
+    await setProfile(profile);
+  } catch (err) {
+    return {
+      success: false,
+      error: err instanceof Error ? err.message : 'Failed to save profile',
+    };
+  }
+
+  return { success: true };
+};
+
 export const updateProfile = async (patch: Partial<Profile>): Promise<Profile> => {
   const existing = await profile.getValue();
   if (!existing) {

@@ -8,7 +8,9 @@ import {
   PROFILE_SCHEMA_VERSION,
   ProfileValidationError,
   deriveFullName,
+  exportProfileJson,
   getProfile,
+  importProfileJson,
   profile,
   normalizeProfile,
   setProfile,
@@ -149,5 +151,76 @@ describe('legacy alias sync', () => {
   it('syncs linkedin <-> links.linkedin on normalize', () => {
     expect(normalizeProfile({ linkedin: 'https://li.com' }).links?.linkedin).toBe('https://li.com');
     expect(normalizeProfile({ links: { linkedin: 'https://li.com' } }).linkedin).toBe('https://li.com');
+  });
+});
+
+describe('exportProfileJson', () => {
+  it('returns formatted JSON with schemaVersion and profile', async () => {
+    fakeBrowser.reset();
+    await setProfile({ name: 'John Doe', email: 'john@test.com' });
+    const json = await exportProfileJson();
+    const parsed = JSON.parse(json);
+    expect(parsed.schemaVersion).toBe(PROFILE_SCHEMA_VERSION);
+    expect(parsed.profile.name).toBe('John Doe');
+    expect(parsed.profile.email).toBe('john@test.com');
+  });
+
+  it('throws when no profile exists', async () => {
+    fakeBrowser.reset();
+    await expect(exportProfileJson()).rejects.toThrow();
+  });
+});
+
+describe('importProfileJson', () => {
+  it('restores a valid payload', async () => {
+    fakeBrowser.reset();
+    const result = await importProfileJson(
+      JSON.stringify({
+        schemaVersion: PROFILE_SCHEMA_VERSION,
+        profile: { name: 'Jane Doe', email: 'jane@test.com' },
+      }),
+    );
+    expect(result.success).toBe(true);
+    expect(result.error).toBeUndefined();
+    const stored = await getProfile();
+    expect(stored?.name).toBe('Jane Doe');
+    expect(stored?.email).toBe('jane@test.com');
+    expect(stored?.schemaVersion).toBe(PROFILE_SCHEMA_VERSION);
+  });
+
+  it('rejects invalid JSON', async () => {
+    fakeBrowser.reset();
+    const result = await importProfileJson('{ not valid json ');
+    expect(result.success).toBe(false);
+    expect(result.error).toBeDefined();
+  });
+
+  it('rejects missing schemaVersion', async () => {
+    fakeBrowser.reset();
+    const result = await importProfileJson(
+      JSON.stringify({ profile: { name: 'Jane Doe' } }),
+    );
+    expect(result.success).toBe(false);
+    expect(result.error).toContain('schemaVersion');
+    const stored = await getProfile();
+    expect(stored).toBeNull();
+  });
+
+  it('rejects missing profile section', async () => {
+    fakeBrowser.reset();
+    const result = await importProfileJson(
+      JSON.stringify({ schemaVersion: PROFILE_SCHEMA_VERSION }),
+    );
+    expect(result.success).toBe(false);
+    expect(result.error).toContain('profile');
+  });
+
+  it('rejects empty profile name', async () => {
+    fakeBrowser.reset();
+    const result = await importProfileJson(
+      JSON.stringify({ schemaVersion: PROFILE_SCHEMA_VERSION, profile: { name: '' } }),
+    );
+    expect(result.success).toBe(false);
+    expect(result.error).toContain('name');
   });
 });
