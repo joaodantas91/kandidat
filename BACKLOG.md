@@ -339,7 +339,7 @@ Important form behaviors:
   - **Files:** `src/entrypoints/options/profile/ProfileExportImport.svelte`, `src/core/storage/storage.ts`, `src/entrypoints/options/Options.svelte`.
   - **Criteria:** Validates imported JSON against `PROFILE_SCHEMA_VERSION`; rejects malformed payloads; downloads clean `.json` file; unit tests cover import validation and round-trip restore.
 
-- [ ] **TASK-31: Remove Overkill Application Tracker Dashboard & Purge Tracking Bloat (PRIORITY)**
+- [x] **TASK-31: Remove Overkill Application Tracker Dashboard & Purge Tracking Bloat (PRIORITY)**
   - **Goal:** Strip out the application tracker feature from the extension (popup dashboard, applications storage, status badges, and related tests) to eliminate extension bloat and refocus purely on high-performance autofill and profile management.
   - **Files:** `src/entrypoints/popup/App.svelte`, `src/lib/applications.svelte` (delete), `src/core/storage/applications.ts` (delete), `src/core/storage/applications.test.ts` (delete), `src/entrypoints/popup/App.test.ts`, `src/core/ats/confirmation.ts`.
   - **Criteria:** Application tracker UI and storage files completely removed; popup simplified to clean autofill trigger and profile status; unit tests pass with 100% exit code 0 and clean typecheck.
