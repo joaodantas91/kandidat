@@ -1,7 +1,10 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { getProfile } from '@/core/storage/storage';
+  import { showToast } from '@/lib/toastStore';
   import Toast from '@/lib/Toast.svelte';
+
+  type AutofillMessage = { type: 'KANDIDAT_TRIGGER_AUTOFILL' };
 
   let openOptionsPage = $state(false);
   let profileName = $state('');
@@ -11,6 +14,16 @@
   function handleSettingsClick() {
     openOptionsPage = true;
     browser.runtime.openOptionsPage();
+  }
+
+  async function handleTriggerAutofill() {
+    try {
+      const message: AutofillMessage = { type: 'KANDIDAT_TRIGGER_AUTOFILL' };
+      await browser.runtime.sendMessage(message);
+    } catch {
+      // No content script listener; autofill still handled locally by content script.
+    }
+    showToast('Autofill triggered', 'success');
   }
 
   async function loadProfile() {
@@ -35,7 +48,9 @@
       <span class="logo">K</span>
       <h1 class="title">Kandidat</h1>
     </div>
-    <button class="settings-btn" onclick="{handleSettingsClick}">Options</button>
+    <button class="settings-btn" type="button" onclick="{handleSettingsClick}">
+      Settings
+    </button>
   </header>
 
   <Toast />
@@ -50,34 +65,45 @@
             <span class="profile-email">{profileEmail}</span>
           {/if}
         </div>
-        <p class="profile-hint">Active candidate profile. Edit in Options.</p>
+        <div class="profile-status-row">
+          <span class="status-badge">
+            <span class="status-dot" aria-hidden="true">●</span>
+            Profile Ready
+          </span>
+          <button class="edit-link" type="button" onclick="{handleSettingsClick}">
+            Edit profile →
+          </button>
+        </div>
       {:else}
         <div class="profile-info empty">
-          <span class="profile-name">No profile set up</span>
+          <span class="profile-name">No profile configured</span>
         </div>
-        <p class="profile-hint">Create a profile to enable autofill.</p>
+        <button class="btn btn-secondary" type="button" onclick="{handleSettingsClick}">
+          Create Profile
+        </button>
       {/if}
-      <button class="btn-secondary open-options-btn" onclick="{handleSettingsClick}">
-        Open Options Settings
-      </button>
     </section>
 
     <section class="card quickfill-status">
       <h2 class="section-title">Quick Fill</h2>
-      <p class="quickfill-hint">
-        Fill job application forms with your active profile directly on the page.
-      </p>
-      <div class="quickfill-actions">
-        <button class="btn-secondary" onclick="{handleSettingsClick}">
-          Setup Profile
+      {#if hasProfile}
+        <p class="quickfill-hint">Autofill application form on the active page.</p>
+        <button class="btn btn-primary" type="button" onclick="{handleTriggerAutofill}">
+          ⚡ Fill Current Form
         </button>
-      </div>
+      {:else}
+        <p class="quickfill-hint">Create profile to enable</p>
+        <button class="btn btn-secondary" type="button" disabled>
+          Fill Current Form
+        </button>
+      {/if}
     </section>
   </main>
 </div>
 
 <style>
   @import '/src/styles/tokens.css';
+  @import '/src/styles/components.css';
 
   .popup {
     min-width: 320px;
@@ -181,34 +207,46 @@
     color: var(--color-text-secondary);
   }
 
-  .profile-hint {
-    font-size: var(--font-xs);
-    color: var(--color-text-muted);
-    margin: 0;
+  .profile-status-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    flex-wrap: wrap;
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    background: var(--color-bg-elevated);
+    border: 1px solid var(--color-border-default);
+    border-radius: var(--radius-sm);
+    padding: var(--space-1) var(--space-2);
+    font-size: var(--font-sm);
+    color: var(--color-text-primary);
+  }
+
+  .status-dot {
+    color: rgb(16, 185, 129);
+  }
+
+  .edit-link {
+    background: transparent;
+    border: none;
+    color: var(--color-text-primary);
+    font-size: var(--font-sm);
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+  }
+
+  .edit-link:hover {
+    color: var(--color-accent);
   }
 
   .quickfill-hint {
     font-size: var(--font-sm);
     color: var(--color-text-secondary);
     margin: 0;
-  }
-
-  .quickfill-actions {
-    display: flex;
-    gap: var(--space-2);
-  }
-
-  .btn-secondary {
-    background: transparent;
-    border: 1px solid var(--color-border-default);
-    color: var(--color-text-primary);
-    padding: var(--space-2) var(--space-3);
-    font-size: var(--font-sm);
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-  }
-
-  .btn-secondary:hover {
-    border-color: var(--color-border-hover);
   }
 </style>
