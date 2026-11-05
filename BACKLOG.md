@@ -360,3 +360,13 @@ Important form behaviors:
   - **Goal:** Implement user-consented, zero-PII diagnostic banner that captures unmatched ATS field schemas and prepares anonymized telemetry payload for platform coverage improvements.
   - **Files:** `src/lib/components/DiagnosticBanner.svelte`, `src/core/telemetry/telemetry.ts`, `src/entrypoints/background/serviceWorker.ts`.
   - **Criteria:** Diagnostic banner renders only on unmatched fields with explicit Yes/No consent, scrubs all PII before payload formulation, respects user storage opt-out; unit tests verify schema and zero PII.
+
+- [ ] **TASK-29: Multilingual ATS Form Field Detection Heuristics (EN, ES, PT)**
+  - **Goal:** Expand `fieldDetector.ts` to detect and map job application input fields across English, Spanish, and Portuguese using diacritic-insensitive normalization and localized keyword dictionaries.
+  - **Files:** `src/core/autofill/i18nFieldDictionary.ts`, `src/core/autofill/fieldDetector.ts`, `src/core/autofill/fieldDetector.test.ts`.
+  - **Criteria:** Correctly identifies localized name, email, phone, CV, and link fields in EN, ES, and PT mock ATS DOMs with 100% test pass rate.
+
+- [ ] **TASK-30: Svelte 5 Reactive UI i18n Engine & Settings Language Selector**
+  - **Goal:** Implement a zero-dependency Svelte 5 Rune-based localization engine supporting English, Spanish, and Portuguese with browser auto-detection and an instant language toggle in Profile Settings.
+  - **Files:** `src/core/i18n/index.ts`, `src/core/i18n/locales/{en,es,pt}.json`, `src/entrypoints/options/Options.svelte`, `src/core/storage/settings.ts`.
+  - **Criteria:** User can switch UI language in Settings dropdown; UI strings in Options and Popup update reactively without page reload; preference persists in storage.
