@@ -344,6 +344,11 @@ Important form behaviors:
   - **Files:** `src/entrypoints/popup/App.svelte`, `src/lib/applications.svelte` (delete), `src/core/storage/applications.ts` (delete), `src/core/storage/applications.test.ts` (delete), `src/entrypoints/popup/App.test.ts`, `src/core/ats/confirmation.ts`.
   - **Criteria:** Application tracker UI and storage files completely removed; popup simplified to clean autofill trigger and profile status; unit tests pass with 100% exit code 0 and clean typecheck.
 
+- [ ] **TASK-33: Popup Ergonomic Redesign & Settings Button Deduplication**
+  - **Goal:** Eliminate 3 duplicate settings buttons in the popup. Keep single `[⚙️ Settings]` button in header. In Profile card, show active candidate name/email with status pill (`● Ready`) and subtle text link `Edit profile`. In Quick Fill card, replace redundant setup button with actionable `[⚡ Fill Current Form]` trigger sending message to active tab.
+  - **Files:** `src/entrypoints/popup/App.svelte`, `src/entrypoints/popup/App.test.ts`.
+  - **Criteria:** Exactly 1 global settings button; active profile shows status badge and edit link without giant button; Quick Fill triggers tab autofill when profile exists; 100% vitest and typecheck pass.
+
 - [ ] **TASK-32: Standardize Options & Profile Settings Button Sizes & Form Actions Layout**
   - **Goal:** Unify all action buttons in `ProfileManager.svelte` and `Options.svelte` using consistent `.btn` design tokens, eliminate mismatched `.reset-btn`, and separate form actions (Save / Reset) from file migration actions (Export / Import) with clean visual grouping.
   - **Files:** `src/entrypoints/options/ProfileManager.svelte`, `src/entrypoints/options/Options.svelte`, `src/styles/components.css`, `src/entrypoints/options/Options.test.ts`.
