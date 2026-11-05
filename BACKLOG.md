@@ -324,7 +324,7 @@ Important form behaviors:
     - `src/entrypoints/options/ProfileManager.svelte` (Slim coordinator component, <150 lines, managing active profile state and persistence)
   - **Criteria:** All profile subcomponents use Svelte 5 runes (`$props()`, `$state()`); UI appearance remains 100% identical under `tokens.css`; `bunx vitest run` passes with 236/236 tests; zero `as any` or `@ts-ignore`.
 
-- [ ] **TASK-22: Profile-Powered Inline Quick Fill Action Bar**
+- [x] **TASK-22: Profile-Powered Inline Quick Fill Action Bar**
   - **Goal:** Inject a lightweight floating action bar on supported ATS pages when form fields are detected, providing a one-click "Fill Form" button and a dropdown preview of the candidate's active profile data.
   - **Files:** `src/entrypoints/floating.content.ts`, `src/lib/components/QuickFillBar.svelte`, `src/core/autofill/fieldDetector.ts`.
   - **Criteria:** Floating action bar renders cleanly without injecting host CSS pollution, displays detected field counts, triggers platform adapter autofill on click, and uses existing toast notifications for success states.
