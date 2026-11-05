@@ -329,7 +329,7 @@ Important form behaviors:
   - **Files:** `src/entrypoints/floating.content.ts`, `src/lib/components/QuickFillBar.svelte`, `src/core/autofill/fieldDetector.ts`.
   - **Criteria:** Floating action bar renders cleanly without injecting host CSS pollution, displays detected field counts, triggers platform adapter autofill on click, and uses existing toast notifications for success states.
 
-- [ ] **TASK-23: Application Tracker Dashboard & Status Filter UI**
+- [x] **TASK-23: Application Tracker Dashboard & Status Filter UI**
   - **Goal:** Enhance the popup application tracker with search filtering, status badges (Applied, Interviewing, Rejected, Offered), and manual job entry support.
   - **Files:** `src/lib/applications.svelte`, `src/core/storage/applications.ts`, `src/entrypoints/popup/App.svelte`, `src/entrypoints/popup/App.test.ts`.
   - **Criteria:** Users can filter tracked applications by company name or ATS platform, update application status manually, and delete historical entries; unit tests verify storage and filtering logic with 100% pass rate.
