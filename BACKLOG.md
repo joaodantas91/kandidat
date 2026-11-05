@@ -350,9 +350,14 @@ Important form behaviors:
   - **Criteria:** Exactly 1 global settings button; active profile shows status badge and edit link without giant button; Quick Fill triggers tab autofill when profile exists; 100% vitest and typecheck pass.
 
 - [ ] **TASK-32: Standardize Options & Profile Settings Button Sizes & Form Actions Layout**
-  - **Goal:** Unify all action buttons in `ProfileManager.svelte` and `Options.svelte` using consistent `.btn` design tokens, eliminate mismatched `.reset-btn`, and separate form actions (Save / Reset) from file migration actions (Export / Import) with clean visual grouping.
+  - **Goal:** Unify all action buttons in `ProfileManager.svelte` and `Options.svelte` using consistent `.btn` design tokens, eliminate mismatched `.reset-btn`, remove monospace code fonts from Export/Import, and separate form actions (Save / Reset) from file migration actions (Export / Import) with clean visual grouping.
   - **Files:** `src/entrypoints/options/ProfileManager.svelte`, `src/entrypoints/options/Options.svelte`, `src/styles/components.css`, `src/entrypoints/options/Options.test.ts`.
   - **Criteria:** All buttons share identical height, padding, and typography tokens; no mismatched `.reset-btn`; clear visual separation between form actions and backup actions; passes vitest and typecheck.
+
+- [ ] **TASK-34: Floating Quick Fill Bar Shadow DOM Styles & Theme Injection**
+  - **Goal:** Fix unstyled raw HTML / Times New Roman rendering of the floating quick fill bar by injecting encapsulated CSS design tokens and component styles into the Shadow DOM root.
+  - **Files:** `src/entrypoints/floating.content.ts`, `src/lib/components/QuickFillBar.svelte`, `src/styles/tokens.css`.
+  - **Criteria:** Floating bar renders with dark surface background, rounded corners, clean SVG icon, and token typography inside host ATS pages without host CSS interference; passes vitest and typecheck.
 
 - [ ] **TASK-25: Keyboard Hotkeys & Accessible Focus Ring Navigation**
   - **Goal:** Add keyboard shortcuts (e.g. `Alt+Shift+F` for quick autofill trigger, `Escape` to close modal/floating bar) and high-contrast accessible focus outlines for keyboard-only navigation.
