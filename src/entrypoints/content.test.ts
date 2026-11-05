@@ -1,9 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { fakeBrowser } from 'wxt/testing/fake-browser';
 import type { Profile } from '@/core/storage/storage';
-import type { ContentScriptContext } from 'wxt/client';
+import { ContentScriptContext } from 'wxt/utils/content-script-context';
 
-const mockCtx: ContentScriptContext = {};
+const mockCtx: ContentScriptContext = new ContentScriptContext('test');
 
 const mocks = vi.hoisted(() => ({
   fillApplication: vi.fn(),

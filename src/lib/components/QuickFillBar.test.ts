@@ -63,16 +63,16 @@ describe('QuickFillBar.svelte', () => {
     const comp = mount(QuickFillBar, { target });
     await new Promise((resolve) => setTimeout(resolve, 50));
 
-    const previewBtn = target.querySelector('.btn-secondary.btn-sm');
+    const previewBtn = target.querySelector<HTMLButtonElement>('.btn-secondary.btn-sm');
     expect(previewBtn).not.toBeNull();
 
-    previewBtn.click();
+    previewBtn!.click();
     await new Promise((resolve) => setTimeout(resolve, 50));
 
     const preview = target.querySelector('#profile-preview');
     expect(preview).not.toBeNull();
 
-    previewBtn.click();
+    previewBtn!.click();
     await new Promise((resolve) => setTimeout(resolve, 50));
 
     const previewAfterClose = target.querySelector('#profile-preview');
@@ -128,7 +128,7 @@ describe('QuickFillBar.svelte', () => {
     const result1 = typeof value1 === 'string' ? value1 : undefined;
     expect(result1).toBe('Test User');
 
-    const value2 = profile['unknown'];
+    const value2 = (profile as Record<string, unknown>)['unknown'];
     const result2 = typeof value2 === 'string' ? value2 : undefined;
     expect(result2).toBeUndefined();
   });

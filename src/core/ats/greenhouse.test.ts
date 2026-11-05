@@ -185,7 +185,7 @@ describe('fillGreenhouse', () => {
   });
 
   it('fills work authorization no from question label', () => {
-    const profileNoAuth = {
+    const profileNoAuth: Profile = {
       ...profile,
       workAuthorization: {
         authorizedToWork: false,

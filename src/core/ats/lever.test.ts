@@ -11,7 +11,7 @@ const profile: LeverProfile = {
   email: 'john@doe.com',
   phone: '999999',
   org: 'Acme Inc',
-  location: 'San Francisco, CA, USA',
+  location: { city: 'San Francisco', state: 'CA', country: 'USA' },
   linkedin: 'www.linkedin.com/in/john-doe',
   workAuthorization: {
     authorizedToWork: true,
@@ -168,7 +168,7 @@ describe('fillLever()', () => {
 
     fillLever(profileWithAuth, document);
 
-    const yesRadio = document.querySelector('card input[type="radio"][value="yes"]');
+    const yesRadio = document.querySelector<HTMLInputElement>('card input[type="radio"][value="yes"]');
     expect(yesRadio?.value).toBe('yes');
   });
 
@@ -192,7 +192,7 @@ describe('fillLever()', () => {
 
     fillLever(profileNoAuth, document);
 
-    const noRadio = document.querySelector('card input[type="radio"][value="no"]');
+    const noRadio = document.querySelector<HTMLInputElement>('card input[type="radio"][value="no"]');
     expect(noRadio?.value).toBe('no');
   });
 });

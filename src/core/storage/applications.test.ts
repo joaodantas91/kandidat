@@ -26,6 +26,7 @@ describe('applications storage', () => {
         url: 'https://jobs.lever.co/acme/apply',
         ats: 'lever',
         appliedAt: '2024-01-15',
+        status: 'Applied',
       },
     ]);
 

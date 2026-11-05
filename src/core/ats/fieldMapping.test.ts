@@ -149,7 +149,7 @@ describe('resolveLinks', () => {
 });
 
 describe('resolveWorkAuthorization', () => {
-  const baseWaProfile = {
+  const baseWaProfile: Profile = {
     ...baseProfile,
     workAuthorization: {
       authorizedToWork: true,
@@ -255,8 +255,8 @@ describe('setFieldValue', () => {
 
     expect(inputHandler).toHaveBeenCalled();
     expect(changeHandler).toHaveBeenCalled();
-    expect(inputHandler.mock.calls[0][0].bubbles).toBe(true);
-    expect(changeHandler.mock.calls[0][0].bubbles).toBe(true);
+    expect(inputHandler.mock.calls[0]?.[0]?.bubbles).toBe(true);
+    expect(changeHandler.mock.calls[0]?.[0]?.bubbles).toBe(true);
   });
 
   it('falls back to direct assignment when native setter unavailable', () => {

@@ -144,8 +144,8 @@ export const fillGreenhouse = (
     const linkInput = root.querySelector<HTMLInputElement>(
       `input[name*="${key}"], input[id*="${key}"]`,
     );
-    if (linkInput && linkInput.value.trim().length === 0) {
-      setFieldValue(linkInput as HTMLInputElement, value);
+    if (linkInput && value && linkInput.value.trim().length === 0) {
+      setFieldValue(linkInput, value);
     }
   }
 };
