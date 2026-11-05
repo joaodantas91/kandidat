@@ -334,13 +334,13 @@ Important form behaviors:
   - **Files:** `src/lib/applications.svelte`, `src/core/storage/applications.ts`, `src/entrypoints/popup/App.svelte`, `src/entrypoints/popup/App.test.ts`.
   - **Criteria:** Users can filter tracked applications by company name or ATS platform, update application status manually, and delete historical entries; unit tests verify storage and filtering logic with 100% pass rate.
 
-- [ ] **TASK-24: Privacy-Preserving Diagnostic & Unmatched Field Telemetry Core**
-  - **Goal:** Enable users to optionally report autofill failures and missing field mappings without transmitting sensitive personal data (Zero-PII).
-  - **Files:** `src/core/telemetry/telemetry.ts`, `src/core/telemetry/telemetry.test.ts`.
-  - **Criteria:** Telemetry payload strips all user values and contains only sanitized DOM metadata (element tag, input `type`, `name`, `id`, `data-automation-id`, and `aria-label`); unit tests verify 100% Zero-PII sanitization and opt-in consent toggle logic.
-
-- [ ] **TASK-25: Candidate Profile JSON Export & Import with Schema Validation**
+- [ ] **TASK-24: Candidate Profile JSON Export & Import with Schema Validation**
   - **Goal:** Provide seamless profile backup, export, and migration by allowing users to download their candidate profile as a formatted JSON file and import an existing profile with versioned schema validation.
   - **Files:** `src/entrypoints/options/profile/ProfileExportImport.svelte`, `src/core/storage/storage.ts`, `src/entrypoints/options/Options.svelte`.
   - **Criteria:** Validates imported JSON against `PROFILE_SCHEMA_VERSION`; rejects malformed payloads; downloads clean `.json` file; unit tests cover import validation and round-trip restore.
+
+- [ ] **TASK-25: Keyboard Hotkeys & Accessible Focus Ring Navigation**
+  - **Goal:** Add keyboard shortcuts (e.g. `Alt+Shift+F` for quick autofill trigger, `Escape` to close modal/floating bar) and high-contrast accessible focus outlines for keyboard-only navigation.
+  - **Files:** `src/entrypoints/floating.content.ts`, `src/lib/components/QuickFillBar.svelte`, `src/styles/components.css`.
+  - **Criteria:** Keyboard shortcuts registered cleanly via browser commands API / keydown listeners; accessible focus ring styling across all inputs; unit tests verify event handlers with 100% pass rate.
 
