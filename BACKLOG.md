@@ -349,3 +349,14 @@ Important form behaviors:
   - **Goal:** Standardize the "Save Profile" action button and form action bar in Profile Settings to adhere to unified design system tokens (`.btn`, `.btn-primary`, `.btn-secondary`) instead of legacy ad-hoc `.save-btn` styling.
   - **Files:** `src/entrypoints/options/ProfileManager.svelte`, `src/styles/components.css`.
   - **Criteria:** Save button matches standard `.btn .btn-primary` height, padding, font-size, and focus outline; form actions layout aligns with `.form-actions` flex container; existing unit tests pass with zero regressions.
+
+
+- [ ] **TASK-27: Lever ATS Platform Adapter & Field Mapping Rules**
+  - **Goal:** Enable one-click autofill on Lever-hosted job application forms by mapping standard candidate profile fields to Lever DOM selectors and handling multi-step application flows.
+  - **Files:** `src/core/autofill/adapters/lever.ts`, `src/core/autofill/fieldDetector.ts`, `src/entrypoints/floating.content.ts`.
+  - **Criteria:** Detects Lever application pages, maps standard profile fields (name, email, phone, links, resume), triggers via Quick Fill Bar, passes unit tests with exit code 0.
+
+- [ ] **TASK-28: Privacy-Preserving Diagnostic Consent Banner & Telemetry Payload**
+  - **Goal:** Implement user-consented, zero-PII diagnostic banner that captures unmatched ATS field schemas and prepares anonymized telemetry payload for platform coverage improvements.
+  - **Files:** `src/lib/components/DiagnosticBanner.svelte`, `src/core/telemetry/telemetry.ts`, `src/entrypoints/background/serviceWorker.ts`.
+  - **Criteria:** Diagnostic banner renders only on unmatched fields with explicit Yes/No consent, scrubs all PII before payload formulation, respects user storage opt-out; unit tests verify schema and zero PII.
