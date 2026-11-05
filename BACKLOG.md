@@ -344,3 +344,8 @@ Important form behaviors:
   - **Files:** `src/entrypoints/floating.content.ts`, `src/lib/components/QuickFillBar.svelte`, `src/styles/components.css`.
   - **Criteria:** Keyboard shortcuts registered cleanly via browser commands API / keydown listeners; accessible focus ring styling across all inputs; unit tests verify event handlers with 100% pass rate.
 
+
+- [ ] **TASK-26: Profile Settings Save Button Layout & Sizing Fix**
+  - **Goal:** Standardize the "Save Profile" action button and form action bar in Profile Settings to adhere to unified design system tokens (`.btn`, `.btn-primary`, `.btn-secondary`) instead of legacy ad-hoc `.save-btn` styling.
+  - **Files:** `src/entrypoints/options/ProfileManager.svelte`, `src/styles/components.css`.
+  - **Criteria:** Save button matches standard `.btn .btn-primary` height, padding, font-size, and focus outline; form actions layout aligns with `.form-actions` flex container; existing unit tests pass with zero regressions.
