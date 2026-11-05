@@ -1,21 +1,13 @@
 # Kandidat Project Roadmap
 
-Long-range vision and future production features. Items here are reserved for post-MVP / client deployment milestones and are not in the active development sprint until promoted.
+## Phase 1: Core Autofill & Usability (Active)
+- **Multilingual ATS Form Detection:** Support Portuguese, Spanish, and English ATS form fields with diacritic-folding heuristics.
+- **Platform Adapters:** Direct integration adapters for Lever.co, Greenhouse.io, Workday, and Ashby.
+- **Ergonomics & Keyboard Accessibility:** Keyboard shortcuts (`Alt+Shift+F`, `Escape`) and high-contrast focus rings.
+- **In-App Localization (i18n):** Settings language switcher for extension UI (English, Portuguese, Spanish).
+- **Profile Backup & Migration:** JSON export and schema-validated import.
 
----
-
-## Production & Client Deployment Phase
-
-### Privacy-Preserving Diagnostic & Form Telemetry (User-Consented)
-- **Goal:** Enable users to optionally report autofill failures and missing field mappings to our backend without exposing any sensitive personal data (PII).
-- **Triggers:** Extension detects an unhandled form step, 0 fields populated on a supported ATS portal, or a thrown adapter error.
-- **Privacy & Consent Constraints:**
-  - **Explicit User Consent:** A non-intrusive banner/dialog asks: *"Autofill encountered missing fields. Send anonymized diagnostics to improve Kandidat?"* with explicit Yes/No.
-  - **Strict Zero-PII Policy:** Under NO circumstances send user profile data, names, emails, addresses, or filled values.
-  - **Payload Schema:**
-    - `ats`: Detected platform (`lever` | `greenhouse` | `workday` | `unknown`)
-    - `pageHost`: Host domain (e.g. `jobs.lever.co`)
-    - `unmatchedFields`: Array of DOM metadata only (element tag, input `type`, `name`, `id`, `data-automation-id`, and sanitized `aria-label`).
-    - `errorCode`: Error classification string.
-    - `extensionVersion`: Client semver.
-- **Backend Endpoint:** Secure HTTPS endpoint receiving telemetry to prioritize new ATS adapter rules and field heuristics.
+## Phase 2: Future / Post-MVP (Deferred)
+> [!NOTE]
+> Items below are strictly reserved for post-v1 client deployment. Do not schedule into active sprint backlog until promoted.
+- **Privacy-Preserving Diagnostic Telemetry (Deferred):** Optional, user-consented anonymized failure reporting.
