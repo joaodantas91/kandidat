@@ -356,11 +356,6 @@ Important form behaviors:
   - **Files:** `src/core/autofill/adapters/lever.ts`, `src/core/autofill/fieldDetector.ts`, `src/entrypoints/floating.content.ts`.
   - **Criteria:** Detects Lever application pages, maps standard profile fields (name, email, phone, links, resume), triggers via Quick Fill Bar, passes unit tests with exit code 0.
 
-- [ ] **TASK-28: Privacy-Preserving Diagnostic Consent Banner & Telemetry Payload**
-  - **Goal:** Implement user-consented, zero-PII diagnostic banner that captures unmatched ATS field schemas and prepares anonymized telemetry payload for platform coverage improvements.
-  - **Files:** `src/lib/components/DiagnosticBanner.svelte`, `src/core/telemetry/telemetry.ts`, `src/entrypoints/background/serviceWorker.ts`.
-  - **Criteria:** Diagnostic banner renders only on unmatched fields with explicit Yes/No consent, scrubs all PII before payload formulation, respects user storage opt-out; unit tests verify schema and zero PII.
-
 - [ ] **TASK-29: Multilingual ATS Form Field Detection Heuristics (EN, ES, PT)**
   - **Goal:** Expand `fieldDetector.ts` to detect and map job application input fields across English, Spanish, and Portuguese using diacritic-insensitive normalization and localized keyword dictionaries.
   - **Files:** `src/core/autofill/i18nFieldDictionary.ts`, `src/core/autofill/fieldDetector.ts`, `src/core/autofill/fieldDetector.test.ts`.
