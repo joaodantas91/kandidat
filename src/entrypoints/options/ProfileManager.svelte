@@ -63,7 +63,7 @@
   <div class="form-actions">
     <button
       type="submit"
-      class="save-btn"
+      class="btn btn-primary"
       disabled={!isDirty || isSaving}
     >
       {isSaving ? 'Saving...' : 'Save Profile'}

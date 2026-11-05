@@ -94,6 +94,27 @@ describe('Options.svelte', () => {
     unmount(comp);
   });
 
+  it('renders Save Profile button with standard design tokens', async () => {
+    const comp = mount(Options, { target });
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    const tabButtons = target.querySelectorAll<HTMLButtonElement>('.tab-btn');
+    const profileTabBtn = tabButtons[1]!;
+    profileTabBtn.click();
+
+    await new Promise((resolve) => setTimeout(resolve, 50));
+
+    const saveBtn = target.querySelector<HTMLButtonElement>(
+      'button[type="submit"]',
+    )!;
+    expect(saveBtn.classList.contains('btn')).toBe(true);
+    expect(saveBtn.classList.contains('btn-primary')).toBe(true);
+    expect(saveBtn.classList.contains('save-btn')).toBe(false);
+    expect(saveBtn.textContent).toContain('Save Profile');
+
+    unmount(comp);
+  });
+
   it('toggles auto-filter setting', async () => {
     const comp = mount(Options, { target });
     await new Promise((resolve) => setTimeout(resolve, 50));
