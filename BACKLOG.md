@@ -312,7 +312,7 @@ Important form behaviors:
     - Standard Checkbox/Radio: `accent-color: var(--color-text-primary, #eaeaea)`.
   - **Criteria:** Design tokens and component styles imported into popup and options; all components in ProfileManager and Options refactored to consume tokens; inputs in Profile Settings look and behave identically to inputs in Keywords Filters; `bunx vitest run` passes with exit code 0 and zero `as any`.
 
-- [ ] **TASK-REFACTOR-02: Decompose Monolithic ProfileManager into Modular Svelte 5 Subcomponents**
+- [x] **TASK-REFACTOR-02: Decompose Monolithic ProfileManager into Modular Svelte 5 Subcomponents**
   - **Goal:** Break down the monolithic 1,113-line `ProfileManager.svelte` into cohesive, reusable section components under `src/entrypoints/options/profile/`, reducing coordinator complexity and improving maintainability.
   - **Files:**
     - `src/entrypoints/options/profile/IdentitySection.svelte` (Name, preferred name, pronouns, email, phone)
