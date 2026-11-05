@@ -1,6 +1,11 @@
+import tokensCss from '/src/styles/tokens.css?raw';
+import componentsCss from '/src/styles/components.css?raw';
+import { mount } from 'svelte';
 import { fillApplication } from '@/core/ats';
 import { getProfile } from '@/core/storage/storage';
 import { ATS_MATCHES } from '@/core/ats/matches';
+import { detectFields } from '@/core/autofill/fieldDetector';
+import QuickFillBar from '@/lib/components/QuickFillBar.svelte';
 
 export { ATS_MATCHES };
 
@@ -8,7 +13,7 @@ export const AUTO_FILL_MESSAGE = 'AUTO_FILL';
 
 export const FLOATING_HOST_ID = 'kandidat-floating-root';
 
-const BUTTON_STYLES = `
+const HOST_STYLES = `
   :host {
     all: initial;
     position: fixed !important;
@@ -17,53 +22,6 @@ const BUTTON_STYLES = `
     z-index: 2147483647 !important;
     display: block !important;
     isolation: isolate !important;
-  }
-
-  button {
-    all: unset;
-    box-sizing: border-box;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px 20px;
-    border-radius: 9999px;
-    background: #111827;
-    color: #ffffff;
-    font-family:
-      system-ui,
-      -apple-system,
-      BlinkMacSystemFont,
-      'Segoe UI',
-      sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1;
-    cursor: pointer;
-    box-shadow:
-      0 10px 25px rgba(0, 0, 0, 0.25),
-      0 2px 6px rgba(0, 0, 0, 0.15);
-    transition:
-      background-color 150ms ease,
-      transform 150ms ease,
-      box-shadow 150ms ease;
-  }
-
-  button:hover {
-    background: #1d4ed8;
-    transform: translateY(-1px);
-    box-shadow:
-      0 12px 30px rgba(0, 0, 0, 0.3),
-      0 3px 8px rgba(0, 0, 0, 0.18);
-  }
-
-  button:focus-visible {
-    outline: 3px solid #93c5fd;
-    outline-offset: 2px;
-  }
-
-  button:active {
-    transform: translateY(0);
-    background: #1e40af;
   }
 `;
 
@@ -90,8 +48,14 @@ export function triggerAutoFill() {
   void fillProfile();
 }
 
-export function injectFloatingButton(doc: Document = document) {
+let floatingHost: HTMLDivElement | null = null;
+let fieldCheckInterval: ReturnType<typeof setInterval> | null = null;
+
+async function injectFloatingBar(doc: Document = document) {
   if (doc.getElementById(FLOATING_HOST_ID)) return null;
+
+  const hasFields = detectFields(doc);
+  if (Object.keys(hasFields).length === 0) return null;
 
   const host = doc.createElement('div');
   host.id = FLOATING_HOST_ID;
@@ -99,39 +63,72 @@ export function injectFloatingButton(doc: Document = document) {
   const shadow = host.attachShadow({ mode: 'open' });
 
   const style = doc.createElement('style');
-  style.textContent = BUTTON_STYLES;
+  style.textContent = HOST_STYLES;
+  shadow.appendChild(style);
 
-  const button = doc.createElement('button');
-  button.type = 'button';
-  button.textContent = 'Fill Profile';
-  button.setAttribute('aria-label', 'Fill Profile');
-  button.title = 'Fill profile with Kandidat';
-  button.addEventListener('click', (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    triggerAutoFill();
-  });
+  const container = doc.createElement('div');
+  shadow.appendChild(container);
 
-  shadow.append(style, button);
+  const tokensStyle = doc.createElement('style');
+  tokensStyle.textContent = tokensCss;
+  shadow.appendChild(tokensStyle);
+
+  const componentsStyle = doc.createElement('style');
+  componentsStyle.textContent = componentsCss;
+  shadow.appendChild(componentsStyle);
+
+  mount(QuickFillBar, { target: container });
+
   (doc.body ?? doc.documentElement).append(host);
 
+  floatingHost = host;
   return host;
+}
+
+function removeFloatingBar() {
+  if (floatingHost && floatingHost.parentNode) {
+    floatingHost.parentNode.removeChild(floatingHost);
+    floatingHost = null;
+  }
+}
+
+async function checkAndUpdateBar(doc: Document = document) {
+  const hasFields = detectFields(doc);
+  const hasHost = doc.getElementById(FLOATING_HOST_ID);
+
+  if (Object.keys(hasFields).length > 0) {
+    if (!hasHost) {
+      await injectFloatingBar(doc);
+    }
+  } else {
+    if (hasHost) {
+      removeFloatingBar();
+    }
+  }
 }
 
 export default defineContentScript({
   matches: ATS_MATCHES,
   main() {
-    injectFloatingButton();
+    void checkAndUpdateBar();
+
+    fieldCheckInterval = setInterval(() => {
+      void checkAndUpdateBar();
+    }, 2000);
 
     const observer = new MutationObserver(() => {
-      if (!document.getElementById(FLOATING_HOST_ID)) {
-        injectFloatingButton();
-      }
+      void checkAndUpdateBar();
     });
 
     observer.observe(document.documentElement, {
       childList: true,
       subtree: true,
     });
+
+    return () => {
+      if (fieldCheckInterval) clearInterval(fieldCheckInterval);
+      removeFloatingBar();
+      observer.disconnect();
+    };
   },
 });
