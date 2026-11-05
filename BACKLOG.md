@@ -334,7 +334,7 @@ Important form behaviors:
   - **Files:** `src/lib/applications.svelte`, `src/core/storage/applications.ts`, `src/entrypoints/popup/App.svelte`, `src/entrypoints/popup/App.test.ts`.
   - **Criteria:** Users can filter tracked applications by company name or ATS platform, update application status manually, and delete historical entries; unit tests verify storage and filtering logic with 100% pass rate.
 
-- [ ] **TASK-24: Candidate Profile JSON Export & Import with Schema Validation**
+- [x] **TASK-24: Candidate Profile JSON Export & Import with Schema Validation**
   - **Goal:** Provide seamless profile backup, export, and migration by allowing users to download their candidate profile as a formatted JSON file and import an existing profile with versioned schema validation.
   - **Files:** `src/entrypoints/options/profile/ProfileExportImport.svelte`, `src/core/storage/storage.ts`, `src/entrypoints/options/Options.svelte`.
   - **Criteria:** Validates imported JSON against `PROFILE_SCHEMA_VERSION`; rejects malformed payloads; downloads clean `.json` file; unit tests cover import validation and round-trip restore.
